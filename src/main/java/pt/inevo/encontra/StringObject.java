@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package pt.inevo.encontra;
 
 import pt.inevo.encontra.index.AbstractObject;
@@ -15,7 +14,7 @@ public class StringObject extends AbstractObject {
 
     protected String str;
 
-    public StringObject(String s){
+    public StringObject(String s) {
         this.str = s;
     }
 
@@ -34,8 +33,23 @@ public class StringObject extends AbstractObject {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return str;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof StringObject) {
+            StringObject o = (StringObject) obj;
+            return str.equals(o.getStr());
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 67 * hash + (this.str != null ? this.str.hashCode() : 0);
+        return hash;
+    }
 }
