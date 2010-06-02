@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package pt.inevo.encontra.query;
 
 import pt.inevo.encontra.index.AbstractObject;
@@ -14,7 +9,7 @@ import pt.inevo.encontra.index.AbstractObject;
  */
 public class AproximateKnnQuery extends KnnQuery {
 
-    public AproximateKnnQuery(AbstractObject queryObject){
-        super(queryObject);
+    public AproximateKnnQuery(AbstractObject queryObject, int knn){
+        super(queryObject, knn);
     }
 }

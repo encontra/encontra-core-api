@@ -1,14 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package pt.inevo.encontra.query;
 
 import pt.inevo.encontra.index.ResultSet;
 
 /**
- * Random Query - Intent to retrieve a random object.
+ * Random Query - A query to retrieve random objects
  * @author ricardo
  */
 public class RandomQuery implements Query {
