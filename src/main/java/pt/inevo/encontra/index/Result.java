@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package pt.inevo.encontra.index;
 
 /**
@@ -11,7 +7,7 @@ package pt.inevo.encontra.index;
 public class Result {
 
     protected AbstractObject object;
-    protected double similarity; //TO DO - must check if this name is correct
+    protected double similarity; //only used in similarity related queries
 
     public Result(AbstractObject object) {
         this.object = object;

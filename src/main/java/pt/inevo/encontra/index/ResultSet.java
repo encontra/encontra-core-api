@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package pt.inevo.encontra.index;
 
 import java.util.Iterator;
@@ -10,6 +5,7 @@ import java.util.List;
 
 /**
  * The result set of a query.
+ * Contains a list of Result's that can be iterated.
  * @author ricardo
  */
 public class ResultSet {
