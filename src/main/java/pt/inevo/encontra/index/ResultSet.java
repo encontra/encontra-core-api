@@ -1,5 +1,6 @@
 package pt.inevo.encontra.index;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -12,6 +13,11 @@ public class ResultSet {
 
     protected List<Result> results;
     protected Iterator<Result> iterator;
+
+    public ResultSet(){
+        this.results = new ArrayList<Result>();
+        this.iterator = results.iterator();
+    }
 
     public ResultSet(List<Result> results){
         this.results = results;
