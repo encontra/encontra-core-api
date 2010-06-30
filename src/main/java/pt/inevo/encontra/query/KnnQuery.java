@@ -1,13 +1,12 @@
 package pt.inevo.encontra.query;
 
 import pt.inevo.encontra.index.AbstractObject;
-import pt.inevo.encontra.index.ResultSet;
 
 /**
  * K neighrest neighbor Query - Retrieve the K most similar elements
  * @author ricardo
  */
-public class KnnQuery implements Query {
+public class KnnQuery extends Query {
 
     protected AbstractObject queryObject;
     protected int knn;
@@ -49,11 +48,6 @@ public class KnnQuery implements Query {
      */
     public void setKnn(int knn) {
         this.knn = knn;
-    }
-
-    @Override
-    public ResultSet execute() {
-        return new ResultSet(null);
     }
 
     @Override

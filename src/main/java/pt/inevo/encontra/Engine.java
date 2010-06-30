@@ -77,5 +77,4 @@ public abstract class Engine {
      * @return
      */
     public abstract ResultSet search(Query [] queries);
-
 }

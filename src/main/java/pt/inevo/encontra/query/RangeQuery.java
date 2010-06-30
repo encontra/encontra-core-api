@@ -1,14 +1,13 @@
 package pt.inevo.encontra.query;
 
 import pt.inevo.encontra.index.AbstractObject;
-import pt.inevo.encontra.index.ResultSet;
 
 /**
  * Range Query. Given a query (seed point) performs a range query using the
  * maximum range passed as a parameter
  * @author ricardo
  */
-public class RangeQuery implements Query {
+public class RangeQuery extends Query {
 
     protected AbstractObject queryObject;
     protected double range;
@@ -50,11 +49,6 @@ public class RangeQuery implements Query {
      */
     public void setRange(double range) {
         this.range = range;
-    }
-
-    @Override
-    public ResultSet execute() {
-        return new ResultSet(null);
     }
 
     @Override

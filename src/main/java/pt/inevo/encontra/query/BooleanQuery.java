@@ -1,16 +1,16 @@
 package pt.inevo.encontra.query;
 
 import java.util.ArrayList;
-import pt.inevo.encontra.index.ResultSet;
+import java.util.List;
 
 /**
- * Boolean Query - Can do Queries like "A and B" or "A or B"
+ * Boolean Query - Can do Queries like "A and B" or "A or B", etc.
  * @author ricardo
  */
-public class BooleanQuery implements Query {
+public class BooleanQuery extends Query {
 
     public enum BooleanType {
-        AND, OR
+        AND, OR, XOR
     }
 
     protected ArrayList<Query> clauses;
@@ -25,6 +25,7 @@ public class BooleanQuery implements Query {
     }
 
     /**
+     * Gets the type of this Boolean Query
      * @return the type
      */
     public BooleanType getBooleanType() {
@@ -32,6 +33,7 @@ public class BooleanQuery implements Query {
     }
 
     /**
+     * Sets the type of this Boolean Query
      * @param type the type to set
      */
     public void setBooleanType(BooleanType type) {
@@ -39,22 +41,19 @@ public class BooleanQuery implements Query {
     }
 
     /**
+     * Gets the clauses used in this Boolean Query
      * @return the clauses
      */
-    public ArrayList<Query> getClauses() {
+    public List<Query> getClauses() {
         return clauses;
     }
 
     /**
+     * Sets a group of clauses to the Query
      * @param clauses the clauses to set
      */
     public void setClauses(ArrayList<Query> clauses) {
         this.clauses = clauses;
-    }
-
-    @Override
-    public ResultSet execute() {
-        return new ResultSet(null);
     }
 
     @Override

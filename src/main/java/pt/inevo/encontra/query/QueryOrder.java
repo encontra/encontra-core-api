@@ -8,5 +8,30 @@ package pt.inevo.encontra.query;
  */
 public class QueryOrder {
 
-    public int Order;
+    /**
+     * The order of the query
+     */
+    protected int order;
+
+    public QueryOrder(){}
+
+    public QueryOrder(int order){
+        this.order = order;
+    }
+
+    /**
+     * Gets the value of the order property for the underlying query.
+     * @return
+     */
+    public int getOrder(){
+        return this.order;
+    }
+
+    /**
+     * Sets the value of the order property for the underlying query.
+     * @param order
+     */
+    public void setOrder(int order){
+        this.order = order;
+    }
 }

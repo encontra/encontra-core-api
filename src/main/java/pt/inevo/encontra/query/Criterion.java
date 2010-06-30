@@ -6,7 +6,7 @@
 package pt.inevo.encontra.query;
 
 /**
- * Criterion for a Boolean or CriteriaQuery
+ * Criterion CriteriaQuery
  * @author ricardo
  */
 public class Criterion {
