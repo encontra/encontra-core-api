@@ -28,6 +28,18 @@ public class ResultSet {
         return results.toArray(new Result[0]);
     }
 
+    public void setResults(List<Result> results){
+        this.results.addAll(results);
+    }
+
+    public void addResult(Result r){
+        results.add(r);
+    }
+
+    public void removeResult(Result r){
+        results.remove(r);
+    }
+
     public Result getFirst(){
         return results.get(0);
     }
