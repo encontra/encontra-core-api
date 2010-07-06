@@ -14,6 +14,11 @@ public abstract class Query {
     }
 
     /**
+     * The type of the Query.
+     */
+    protected QueryType type;
+
+    /**
      * The weight of the query - used for combination
      */
     protected QueryWeight weight;
