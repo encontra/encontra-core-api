@@ -11,7 +11,8 @@ import java.util.List;
 public interface QuerySorter {
 
     /**
-     * Sorts the queries in the list using the algorithm specified.
+     * Sorts the queries in the list using a sort algorithm provided by the
+     * subclasses.
      * @param queries
      * @return
      */
