@@ -6,8 +6,10 @@ package pt.inevo.encontra.index;
  */
 public class AbstractObject<I,O> {
 
-    protected O object;
-    protected I id;
+    protected O object=null;
+    protected I id=null;
+
+    public AbstractObject(){}
 
     public AbstractObject(I identifier, O object){
         this.id = identifier;
@@ -23,7 +25,7 @@ public class AbstractObject<I,O> {
     }
 
     /**
-     * @param object the object to set
+     * @param obj the object to set
      */
     public void setObject(O obj) {
         this.object = obj;
@@ -42,4 +44,5 @@ public class AbstractObject<I,O> {
     public void setId(I id) {
         this.id = id;
     }
+
 }

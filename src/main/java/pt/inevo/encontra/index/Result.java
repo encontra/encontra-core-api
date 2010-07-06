@@ -4,16 +4,16 @@ package pt.inevo.encontra.index;
  * Represents a Generic result of the query execution.
  * @author ricardo
  */
-public class Result {
+public class Result<T extends AbstractObject> {
 
-    protected AbstractObject object;
+    protected T object;
     protected double similarity; //only used in similarity related queries
 
-    public Result(AbstractObject object) {
+    public Result(T object) {
         this.object = object;
     }
 
-    public AbstractObject getResultObject() {
+    public T getResultObject() {
         return object;
     }
 
