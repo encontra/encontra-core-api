@@ -27,6 +27,13 @@ public interface Index {
     public boolean removeObject(AbstractObject obj);
 
     /**
+     * Checks if an object already exists in the index.
+     * @param object the object to be checked
+     * @return true if already exists, or false otherwise
+     */
+    public boolean contains(AbstractObject object);
+
+    /**
      * Obtains all the objects that are within the index
      * @return a list with all the objects
      */
@@ -51,4 +58,5 @@ public interface Index {
      * @return a ResultSet with all the Result's that respect the query
      */
     public ResultSet search(Query query);
+
 }
