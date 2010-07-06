@@ -6,33 +6,42 @@ import pt.inevo.encontra.index.AbstractObject;
  * The Generic class for describing an EnContRA Descriptor.
  * @author ricardo
  */
-public abstract class EncontraDescriptor {
+public abstract class EncontraDescriptor<T extends AbstractObject> {
 
-    /**
-     * Descriptor Type - is represented as a string given by the class name
-     */
-    protected String type;
+    String id;
 
+    public EncontraDescriptor() {
+       this.id=this.getClass().getCanonicalName();
+    }
+    
+    public EncontraDescriptor(String id){
+        this.id=id;
+    }
+
+    public abstract EncontraDescriptor setStringRepresentation(String descriptor);
+    
     /**
      * Gets the Descriptor type. The type is represented by the Descriptor class
      * name.
      * @return
      */
-    public abstract String getType();
+    public String getId() {
+        return id;
+    }
 
     /**
      * Computes the descriptor from the given object.
      * @param object the object from which we want to determine the descriptor
      * @return true if the operation completes succefully, or false otherwise
      */
-    public abstract boolean extract(AbstractObject object);
+    public abstract boolean extract(T object);
 
     /**
      * Gets the distance between two EnContRA Descriptors.
      * @param descriptor
      * @return
      */
-    public abstract double getDistance(EncontraDescriptor descriptor);
+    public abstract double getDistance(EncontraDescriptor<T> descriptor);
 
     /**
      * Gets a String representation of the Descriptor.
