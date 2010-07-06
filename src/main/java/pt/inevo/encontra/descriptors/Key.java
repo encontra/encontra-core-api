@@ -1,4 +1,4 @@
-package pt.inevo.encontra.index;
+package pt.inevo.encontra.descriptors;
 
 /**
  * Key -> element in the (Key, Descriptor) pair.

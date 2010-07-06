@@ -6,24 +6,40 @@ package pt.inevo.encontra.index;
  */
 public class AbstractObject<T> {
 
-    protected T id;
+    protected T object;
+    protected String id;
 
-    public AbstractObject(T id){
-        this.id = id;
+    public AbstractObject(String identifier, T object){
+        this.id = identifier;
+        this.object = object;
     }
 
     /**
-     * Gets the id of this object.
+     * Gets the object of this object.
+     * @return the object
+     */
+    public T getObject() {
+        return object;
+    }
+
+    /**
+     * @param object the object to set
+     */
+    public void setObject(T id) {
+        this.object = id;
+    }
+
+    /**
      * @return the id
      */
-    public T getId() {
+    public String getId() {
         return id;
     }
 
     /**
      * @param id the id to set
      */
-    public void setId(T id) {
+    public void setId(String id) {
         this.id = id;
     }
 }
