@@ -21,6 +21,10 @@ public class Result<T extends AbstractObject> {
         return similarity;
     }
 
+    public void setSimilarity(double similarity){
+        this.similarity=similarity;
+    }
+
     @Override
     public String toString() {
         return "(" + object.toString() + ", " + similarity + ")";
@@ -31,7 +35,7 @@ public class Result<T extends AbstractObject> {
         if (obj instanceof Result) {
 
             Result res = (Result) obj;
-            if (object.equals(res.getResultObject()) && similarity == res.getSimilarity()) {
+            if (object.getId().equals(res.getResultObject().getId())) {
                 return true;
             }
         }

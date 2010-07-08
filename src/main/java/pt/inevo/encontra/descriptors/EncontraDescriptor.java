@@ -1,14 +1,15 @@
 package pt.inevo.encontra.descriptors;
 
 import pt.inevo.encontra.index.AbstractObject;
+import pt.inevo.encontra.index.IndexEntry;
 
 /**
  * The Generic class for describing an EnContRA Descriptor.
  * @author ricardo
  */
-public abstract class EncontraDescriptor<T extends AbstractObject> {
+public abstract class EncontraDescriptor<T extends AbstractObject> {//implements IndexEntry<String,Object>{
 
-    String id;
+    protected String id;
 
     public EncontraDescriptor() {
        this.id=this.getClass().getCanonicalName();
@@ -54,4 +55,6 @@ public abstract class EncontraDescriptor<T extends AbstractObject> {
      * @return
      */
     public abstract double[] getDoubleRepresentation();
+
+
 }

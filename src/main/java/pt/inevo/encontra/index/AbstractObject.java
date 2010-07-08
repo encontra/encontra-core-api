@@ -1,15 +1,11 @@
 package pt.inevo.encontra.index;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.GenericArrayType;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 
 /**
  * Meta-Object of the framework
  * @author ricardo
  */
-public class AbstractObject<I,O> {
+public class AbstractObject<I,O>{
 
     protected O object=null;
     protected I id=null;
