@@ -31,6 +31,13 @@ public interface Index<O extends AbstractObject> {
     public IndexEntry get(int idx);
     
     /**
+     * Checks if an object already exists in the index.
+     * @param object the object to be checked
+     * @return true if already exists, or false otherwise
+     */
+    public boolean contains(AbstractObject object);
+
+    /**
      * Obtains all the objects that are within the index
      * @return a list with all the objects
      */
@@ -55,4 +62,5 @@ public interface Index<O extends AbstractObject> {
      * @return a ResultSet with all the Result's that respect the query
      */
     public ResultSet search(Query query);
+
 }

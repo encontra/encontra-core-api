@@ -65,5 +65,7 @@ public abstract class Query {
      * Obtains the query type.
      * @return the type that represents the query
      */
-    public abstract QueryType getType();
+    public QueryType getType(){
+        return this.type;
+    }
 }

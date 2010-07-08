@@ -23,7 +23,7 @@ public class QueryOrder {
      * Gets the value of the order property for the underlying query.
      * @return
      */
-    public int getOrder(){
+    public int getValue(){
         return this.order;
     }
 
@@ -31,7 +31,7 @@ public class QueryOrder {
      * Sets the value of the order property for the underlying query.
      * @param order
      */
-    public void setOrder(int order){
+    public void setValue(int order){
         this.order = order;
     }
 }

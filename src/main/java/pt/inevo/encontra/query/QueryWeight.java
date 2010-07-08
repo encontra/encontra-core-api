@@ -22,7 +22,7 @@ public class QueryWeight {
      * Gets the value of the weight for the underlying query
      * @return
      */
-    public double getWeight(){
+    public double getValue(){
         return this.weight;
     }
 
@@ -30,7 +30,7 @@ public class QueryWeight {
      * Sets the value of the weight for the underlying query
      * @param weight
      */
-    public void setWeight(double weight){
+    public void setValue(double weight){
         this.weight = weight;
     }
 }
