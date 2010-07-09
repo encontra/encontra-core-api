@@ -1,18 +1,22 @@
 package pt.inevo.encontra.index;
 
+import pt.inevo.encontra.storage.IEntity;
+
+import java.io.Serializable;
+
 
 /**
  * Meta-Object of the framework
  * @author ricardo
  */
-public class AbstractObject<I,O>{
+public class AbstractObject<ID extends Serializable,O> implements IEntity<ID> {
 
     protected O object=null;
-    protected I id=null;
+    protected ID id=null;
 
     public AbstractObject(){}
 
-    public AbstractObject(I identifier, O object){
+    public AbstractObject(ID identifier, O object){
         this.id = identifier;
         this.object = object;
     }
@@ -35,15 +39,14 @@ public class AbstractObject<I,O>{
     /**
      * @return the id
      */
-    public I getId() {
+    public ID getId() {
         return id;
     }
 
-    /**
-     * @param id the id to set
-     */
-    public void setId(I id) {
-        this.id = id;
+    @Override
+    public void setId(ID id) {
+       this.id=id;
     }
+
 
 }

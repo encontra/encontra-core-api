@@ -1,119 +1,70 @@
 package pt.inevo.encontra.engine;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import pt.inevo.encontra.index.AbstractObject;
-import pt.inevo.encontra.index.Index;
-import pt.inevo.encontra.index.ResultSet;
+
+import pt.inevo.encontra.index.*;
+import pt.inevo.encontra.index.search.IndexSearcher;
+import pt.inevo.encontra.index.search.Searcher;
 import pt.inevo.encontra.query.Query;
 import pt.inevo.encontra.query.QueryCombiner;
+import pt.inevo.encontra.storage.ObjectStorage;
+import pt.inevo.encontra.storage.StorableObject;
 
 /**
  * Entry point of the engine
  * @author ricardo
  */
-public abstract class Engine {
+public class Engine<O extends StorableObject> implements Searcher<O>{
 
-    /**
-     * A list of the registered indexes
-     */
-    protected List<Index> indexes;
-    /**
-     * The current Query Combiner - helps combining the results from the
-     * queries realized.
-     */
-    protected QueryCombiner combiner;
+    ObjectStorage storage;
+
+    protected Searcher searcher;
 
     public Engine() {
         init();
     }
 
-    public Engine(QueryCombiner combiner) {
-        this();
-        this.combiner = combiner;
-    }
 
     private void init() {
-        indexes = new ArrayList<Index>();
+ 
     }
 
-    /**
-     * Add an index to the Engine.
-     * @param idx
-     */
-    public void registerIndex(Index idx) {
-        indexes.add(idx);
+    public void setObjectStorage(ObjectStorage storage){
+        this.storage = storage;
     }
 
-    /**
-     * Remove an index from the Engine.
-     * @param idx
-     */
-    public void unregisterIndex(Index idx) {
-        indexes.remove(idx);
+    public ObjectStorage getObjectStorage() {
+        return storage;
     }
 
-    /**
-     * Gets all the Indexes registered in the Engine.
-     * @return
-     */
-    public List<Index> getRegisteredIndexes() {
-        return indexes;
-    }
-
-    /**
-     * Gets the Query Combiner used by this Engine.
-     * @return
-     */
-    public QueryCombiner getCombiner() {
-        return combiner;
-    }
-
-    /**
-     * Sets the Query Combiner to be used by this Engine.
-     * @param combiner
-     */
-    public void setCombiner(QueryCombiner combiner) {
-        this.combiner = combiner;
-    }
-
-    /**
-     * Perform a search in this engine.
-     * The query result will be the composition of the results from all the
-     * indexes, accordingly to the QueryCombiner rules.
-     * @param query the interrogation
-     * @return a ResultSet with the results from the query
-     */
-    public abstract ResultSet search(Query query);
-
-    /**
-     * Perform a search in this engine, composing a group of queries to the engine.
-     * @param queries
-     * @return
-     */
-    public abstract ResultSet search(Query[] queries);
 
     /**
      * Insert the into the Engine. This makes the object to be inserted into all
      * the indexes registered in the Engine.
      * @param object
      */
-    public void insertObject(AbstractObject object) {
-        for (Index idx : indexes) {
-            idx.insertObject(object);
+    public void insert(O object) {
+        storage.save(object);
+        IndexEntry entry = idxEntryFactories.get(i).createIndexEntry(object);
+        searcher.insert(entry);
+        for(int i=0;i<indexes.size();i++){
+
+            indexes.get(i).insert(entry);
         }
     }
 
-    /**
+    /*
      * Remove the object from the Engine. This makes the object to be removed
      * from all the indexes registered in the Engine.
      * @param object
-     */
+     *
     public void removeObject(AbstractObject object) {
         for (Index idx : indexes) {
-            idx.removeObject(object);
+            idx.remove(object);
         }
-    }
+    }*/
 
     /**
      * Checks if an object exists in the Engine. If one of the registered
@@ -122,12 +73,45 @@ public abstract class Engine {
      * @param object
      * @return
      */
-    public boolean contains(AbstractObject object){
-        for (Index idx : indexes) {
-            if (idx.contains(object)){
-                return true;
-            }
+    public boolean contains(O object){
+        return (storage.get((Serializable)object.getId())!=null);
+    }
+
+    /**
+     * Get a Result with an Object instead of the Index entry
+     * @param idx
+     * @param indexEntryresult
+     * @return
+     */
+    @SuppressWarnings({"unchecked"})
+    protected Result<O> getObjectResult(Index idx,Result indexEntryresult){
+        Serializable id=(Serializable) getEntryFactory(idx).getObjectId((IndexEntry)indexEntryresult.getResult());
+        Result<O> result=new Result<O>((O)storage.get(id));
+        result.setSimilarity(indexEntryresult.getSimilarity());
+
+        return result;
+    }
+
+    protected ResultSet<O>  getObjectResults(Index idx,ResultSet<O> indexEntryResultSet){
+        ResultSet<O> results=new ResultSet<O>();
+
+        for(Result<O> entryResult : indexEntryResultSet) {
+            results.add(getObjectResult(idx,entryResult));
         }
-        return false;
+        return results;
+    }
+
+    public IndexEntryFactory getEntryFactory(Index idx) {
+        return idxEntryFactories.get(indexes.indexOf(idx));
+    }
+
+    @Override
+    public ResultSet<O> search(Query query) {
+        return getObjectResults(searcher.search(query));
+    }
+
+    @Override
+    public ResultSet<O> search(Query[] queries) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

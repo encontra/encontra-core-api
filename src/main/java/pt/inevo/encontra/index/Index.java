@@ -10,38 +10,38 @@ import pt.inevo.encontra.query.Query.QueryType;
  * interface, for insert, remove, list, and search through it;
  * @author ricardo
  */
-public interface Index<O extends AbstractObject> {
-
+public interface Index<E extends IndexEntry> {
+    
     /**
      * Inserts an object into the index
      * @param obj the object to be inserted
      * @return the success of the operation
      */
-    public boolean insert(O obj);
+    public boolean insert(E entry);
 
     /**
      * Removes an object from the index
      * @param obj the object to be removed
      * @return the success of the operation
      */
-    public boolean remove(O obj);
+    public boolean remove(E entry);
 
     public int size();
     
-    public IndexEntry get(int idx);
+    public E get(int idx);
     
     /**
      * Checks if an object already exists in the index.
-     * @param object the object to be checked
+     * @param entry the to be checked
      * @return true if already exists, or false otherwise
      */
-    public boolean contains(AbstractObject object);
+    public boolean contains(E entry);
 
     /**
      * Obtains all the objects that are within the index
      * @return a list with all the objects
      */
-    public List<O> getAll();
+    public List<E> getAll();
 
     /**
      * Obtains all the supported QueryTypes by the index
