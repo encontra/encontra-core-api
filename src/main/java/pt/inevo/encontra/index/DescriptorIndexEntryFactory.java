@@ -24,16 +24,15 @@ public abstract class DescriptorIndexEntryFactory<O extends IndexedObject,E exte
         return extractor;
     }
 
-
     @Override
     protected E setupIndexEntry(O object, E entry) {
         assert (object != null);
-        Descriptor descriptor=extractor.extract(object);
-        if (object.getId() != null)
+        Descriptor descriptor = extractor.extract(object);
+        if (object.getId() != null) {
             entry.setKey(object.getId().toString());
-        return setupIndexEntry(object,descriptor, entry);
+        }
+        return setupIndexEntry(object, descriptor, entry);
     }
-
 
     protected abstract E setupIndexEntry(O object, Descriptor descriptor, E entry);
 
