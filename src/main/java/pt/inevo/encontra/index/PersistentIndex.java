@@ -1,9 +1,12 @@
 package pt.inevo.encontra.index;
 
+import pt.inevo.encontra.storage.IEntity;
+
+
 /**
  * A class that represents a Index that can stored (saved)
  * @author ricardo
  */
-public abstract class PersistentIndex<E extends IndexEntry> implements Index<E>, Storable{
- 
+public interface PersistentIndex<E extends IndexedObject> extends Index<E>, Storable{
+    
 }

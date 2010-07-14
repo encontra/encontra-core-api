@@ -1,11 +1,9 @@
 package pt.inevo.encontra.index.search;
 
-import pt.inevo.encontra.index.Index;
-import pt.inevo.encontra.index.IndexEntryFactory;
 import pt.inevo.encontra.index.ResultSet;
 import pt.inevo.encontra.query.Query;
+import pt.inevo.encontra.storage.EntityStorage;
 
-import java.util.List;
 
 public interface Searcher<E> {
 
@@ -18,10 +16,24 @@ public interface Searcher<E> {
      */
     public ResultSet<E> search(Query query);
 
-    /**
-     * Perform a search in this engine, composing a group of queries to the engine.
-     * @param queries
-     * @return
+    public boolean insert(E entry);
+    
+    public void setObjectStorage(EntityStorage storage);
+
+    public EntityStorage getObjectStorage();
+
+        /**
+     * Obtains all the supported QueryTypes by the index
+     * @return a list of the supported query types
      */
-    public ResultSet<E> search(Query[] queries);
+    public Query.QueryType[] getSupportedQueryTypes();
+
+    /**
+     * Checks if a specific QueryType is supported by the index
+     * @param type the QueryType to be checked
+     * @return true if type is supported, otherwise, retrieved false
+     */
+    public boolean supportsQueryType(Query.QueryType type);
+
+
 }

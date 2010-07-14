@@ -1,8 +1,13 @@
 package pt.inevo.encontra.index;
 
 import java.util.List;
+
+import pt.inevo.encontra.index.search.Searcher;
 import pt.inevo.encontra.query.Query;
 import pt.inevo.encontra.query.Query.QueryType;
+import pt.inevo.encontra.storage.EntityStorage;
+import pt.inevo.encontra.storage.IEntity;
+import pt.inevo.encontra.storage.IEntry;
 
 /**
  * Generic index structure.
@@ -10,7 +15,8 @@ import pt.inevo.encontra.query.Query.QueryType;
  * interface, for insert, remove, list, and search through it;
  * @author ricardo
  */
-public interface Index<E extends IndexEntry> {
+public interface Index<E extends IEntry> extends EntityStorage{
+
     
     /**
      * Inserts an object into the index
@@ -42,25 +48,5 @@ public interface Index<E extends IndexEntry> {
      * @return a list with all the objects
      */
     public List<E> getAll();
-
-    /**
-     * Obtains all the supported QueryTypes by the index
-     * @return a list of the supported query types
-     */
-    public QueryType [] getSupportedQueryTypes();
-
-    /**
-     * Checks if a specific QueryType is supported by the index
-     * @param type the QueryType to be checked
-     * @return true if type is supported, otherwise, retrieved false
-     */
-    public boolean supportsQueryType(QueryType type);
-
-    /**
-     * Searches the index by a specific query
-     * @param query the interrogation to be performed to the index
-     * @return a ResultSet with all the Result's that respect the query
-     */
-    public ResultSet search(Query query);
 
 }

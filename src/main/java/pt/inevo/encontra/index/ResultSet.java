@@ -1,9 +1,6 @@
 package pt.inevo.encontra.index;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * The result set of a query.
@@ -12,28 +9,48 @@ import java.util.List;
  */
 public class ResultSet<T> implements Collection<Result<T>> {
 
-    private List<Result<T>> results;
+    private SortedSet<Result<T>> results;
 
     public ResultSet(){
         this(new ArrayList<Result<T>>());
     }
 
     public ResultSet(List<Result<T>> results){
-        this.results=results;
+        this.results=Collections.synchronizedSortedSet(new TreeSet<Result<T>>());
+        this.results.addAll(results);
     }
 
     public boolean contains(Result<T> res){
-        return results.contains(res);
+        return (indexOf(res) >= 0);
     }
 
     public int indexOf(Result<T> res){
-        return results.indexOf(res);
+        Iterator<Result<T>> iterator = results.iterator();
+        int i=0;
+        Result<T> r;
+        while(iterator.hasNext() && !iterator.next().equals(res)){
+            i++;
+        }
+        if(i>=size())
+            return -1;
+        return i;
     }
 
     public Result<T> get(int index){
-        return results.get(index);
+        Iterator<Result<T>> iterator = results.iterator();
+        while(true){
+            if(iterator.hasNext()) {
+                if(index==0){
+                    return iterator.next();
+                }
+                iterator.next();
+                index--;
+            } else {
+                return null;
+            }
+        }
     }
-    
+
     @Override
     public String toString(){
         String resultSet = "[";
@@ -62,18 +79,32 @@ public class ResultSet<T> implements Collection<Result<T>> {
      * @return the score of the document at given position. The lower the better (its a distance measure).
      */
     public double getScore(int position) {
-        return results.get(position).getSimilarity();
+        return get(position).getSimilarity();
     }
 
     public void invertScores(){
-        for (Result result : results) {
-            result.setSimilarity(1f - result.getSimilarity());
+        List<Result<T>> invertedResults=new ArrayList<Result<T>>();
+        int size=size();
+        for (int i=0;i<size;i++){
+            Result r=get(i);
+            invertedResults.add(r);
+
+            r.setSimilarity(1f - r.getSimilarity());
         }
+        results.clear();
+        results.addAll(invertedResults);
     }
 
-    public void normalizeScores(double maxDistance){
+    // TODO - Precalculate maxScore in ResultSet
+    public void normalizeScores(){
+        double maxScore=Double.NEGATIVE_INFINITY;
         for (Result result : results) {
-            result.setSimilarity(result.getSimilarity() / maxDistance);
+            if(result.getSimilarity()>maxScore){
+                maxScore=result.getSimilarity();
+            }
+        }
+        for (Result result : results) {
+            result.setSimilarity(result.getSimilarity() / maxScore);
         }
     }
 
@@ -112,6 +143,9 @@ public class ResultSet<T> implements Collection<Result<T>> {
         return results.add(tResult);
     }
 
+    public boolean remove(int idx) {
+        return results.remove(get(idx));
+    }
     @Override
     public boolean remove(Object o) {
         return results.remove(o);

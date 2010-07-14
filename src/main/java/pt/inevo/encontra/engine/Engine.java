@@ -2,23 +2,27 @@ package pt.inevo.encontra.engine;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import pt.inevo.encontra.descriptors.Descriptor;
 import pt.inevo.encontra.index.*;
-import pt.inevo.encontra.index.search.IndexSearcher;
+import pt.inevo.encontra.index.search.AbstractSearcher;
 import pt.inevo.encontra.index.search.Searcher;
 import pt.inevo.encontra.query.Query;
-import pt.inevo.encontra.query.QueryCombiner;
-import pt.inevo.encontra.storage.ObjectStorage;
-import pt.inevo.encontra.storage.StorableObject;
+import pt.inevo.encontra.storage.EntityStorage;
+import pt.inevo.encontra.storage.IEntity;
+import pt.inevo.encontra.storage.IEntry;
 
 /**
  * Entry point of the engine
  * @author ricardo
  */
-public class Engine<O extends StorableObject> implements Searcher<O>{
+public class Engine<O extends IEntity> extends AbstractSearcher<O> {
 
-    ObjectStorage storage;
+    IndexedObjectFactory indexedObjectFactory;
+    EntityStorage storage;
 
     protected Searcher searcher;
 
@@ -26,17 +30,12 @@ public class Engine<O extends StorableObject> implements Searcher<O>{
         init();
     }
 
-
     private void init() {
- 
+
     }
 
-    public void setObjectStorage(ObjectStorage storage){
+    public void setObjectStorage(EntityStorage storage){
         this.storage = storage;
-    }
-
-    public ObjectStorage getObjectStorage() {
-        return storage;
     }
 
 
@@ -45,14 +44,23 @@ public class Engine<O extends StorableObject> implements Searcher<O>{
      * the indexes registered in the Engine.
      * @param object
      */
-    public void insert(O object) {
-        storage.save(object);
-        IndexEntry entry = idxEntryFactories.get(i).createIndexEntry(object);
-        searcher.insert(entry);
-        for(int i=0;i<indexes.size();i++){
-
-            indexes.get(i).insert(entry);
+    public boolean insert(O object) {
+        object=(O)storage.save(object);
+        if(object instanceof IndexedObject){
+            searcher.insert(object);
+        } else {
+            try {
+                //storage.save(object);
+                List<IndexedObject> indexedObjects=indexedObjectFactory.processBean(object);
+                for(IndexedObject obj : indexedObjects){
+                    searcher.insert(obj);
+                }
+            } catch (IndexingException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
         }
+
+        return true;
     }
 
     /*
@@ -77,41 +85,46 @@ public class Engine<O extends StorableObject> implements Searcher<O>{
         return (storage.get((Serializable)object.getId())!=null);
     }
 
-    /**
-     * Get a Result with an Object instead of the Index entry
-     * @param idx
-     * @param indexEntryresult
-     * @return
-     */
-    @SuppressWarnings({"unchecked"})
-    protected Result<O> getObjectResult(Index idx,Result indexEntryresult){
-        Serializable id=(Serializable) getEntryFactory(idx).getObjectId((IndexEntry)indexEntryresult.getResult());
-        Result<O> result=new Result<O>((O)storage.get(id));
-        result.setSimilarity(indexEntryresult.getSimilarity());
 
-        return result;
-    }
-
-    protected ResultSet<O>  getObjectResults(Index idx,ResultSet<O> indexEntryResultSet){
-        ResultSet<O> results=new ResultSet<O>();
-
-        for(Result<O> entryResult : indexEntryResultSet) {
-            results.add(getObjectResult(idx,entryResult));
-        }
-        return results;
-    }
-
-    public IndexEntryFactory getEntryFactory(Index idx) {
-        return idxEntryFactories.get(indexes.indexOf(idx));
-    }
 
     @Override
     public ResultSet<O> search(Query query) {
-        return getObjectResults(searcher.search(query));
+        return getResultObjects(searcher.search(query));
+    }
+
+    public EntityStorage getObjectStorage() {
+        return storage;
     }
 
     @Override
-    public ResultSet<O> search(Query[] queries) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    protected Result<O> getResultObject(Result<IEntry> entryresult) {
+        return new Result<O>((O) storage.get(entryresult.getResult().getId()));
+    }
+
+    @Override
+    public Query.QueryType[] getSupportedQueryTypes() {
+        return searcher.getSupportedQueryTypes();
+    }
+
+    @Override
+    public boolean supportsQueryType(Query.QueryType type) {
+        return searcher.supportsQueryType(type);
+    }
+
+    public Searcher getSearcher() {
+        return searcher;
+    }
+
+    public void setSearcher(Searcher searcher) {
+        this.searcher = searcher;
+        this.searcher.setObjectStorage(this.storage);
+    }
+
+    public IndexedObjectFactory getIndexedObjectFactory() {
+        return indexedObjectFactory;
+    }
+
+    public void setIndexedObjectFactory(IndexedObjectFactory indexedObjectFactory) {
+        this.indexedObjectFactory = indexedObjectFactory;
     }
 }

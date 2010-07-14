@@ -1,6 +1,6 @@
 package pt.inevo.encontra.storage;
 
-import pt.inevo.encontra.index.AbstractObject;
+import pt.inevo.encontra.index.IndexedObject;
 
 import java.io.Serializable;
 
@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @param <O>  The 
  * @param <V>  A Serializable Value used for storing
  */
-public abstract class StorableObject<ID extends Serializable,O,V extends Serializable> extends AbstractObject<ID,O> implements IEntry<ID,V> {
+public abstract class StorableObject<ID extends Serializable,O,V extends Serializable> extends IndexedObject<ID,O>  {
 
     public StorableObject() {
         super();
@@ -21,9 +21,7 @@ public abstract class StorableObject<ID extends Serializable,O,V extends Seriali
     }
     
 
-    @Override
-    public abstract V getValue();
+    public abstract V getStorableValue();
 
-    @Override
-    public abstract void setValue(V o);
+    public abstract void setStorableValue(V o);
 }

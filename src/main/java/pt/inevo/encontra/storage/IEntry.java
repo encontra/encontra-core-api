@@ -7,7 +7,7 @@ import java.io.Serializable;
  * @param <K> The type of the entry Key
  * @param <V>
  */
-public interface IEntry<K extends Serializable,V extends Serializable> extends IEntity<K>{
+public interface IEntry<K extends Serializable,V> extends IEntity<K>{
     public V getValue();
     public void setValue(V o);
 }

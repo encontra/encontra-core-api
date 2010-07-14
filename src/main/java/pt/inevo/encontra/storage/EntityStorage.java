@@ -10,7 +10,7 @@ import java.util.List;
  * @param <I>
  * @param <O>
  */
-public interface EntryStorage<I extends Serializable,O extends IEntry<I, ?>> {
+public interface EntityStorage<I extends Serializable,O extends IEntity<I>> {
 
 
     /**
@@ -22,40 +22,23 @@ public interface EntryStorage<I extends Serializable,O extends IEntry<I, ?>> {
      * @return object
      */
     O get(I id);
-    /**
-     * Retrieve objects using the given ids as primary keys.
-     *
-     * @param ids objects's ids
-     * @return list of objects
-     */
-    List<O> get(I... ids);
 
-    /**
-     * Retrieve all persisted objects.
-     *
-     * @return list of objects
-     */
-    List<O> getAll();
 
      /**
      * Save all changes made to an object.
      *
      * @param object object
      */
-    void save(O object);
+    O save(O object);
 
-    /**
-     * Save all changes made to objects.
-     *
-     * @param objects objects
-     */
-    void save(O... objects);
 
+    public void save(final O... objects);
+    
     /**
      * Remove an object by given id. Check if object is not default one.
      *
      *
-     * @param id object's pk
+     * @param object object
      */
-    void delete(I id);
+    void delete(O object);
 }

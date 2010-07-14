@@ -55,10 +55,10 @@ public class Result<T> implements Comparable {
         if (!(o instanceof Result)) {
             return 0;
         } else {
-            int compareValue = (int) Math.signum(similarity - ((Result) o).similarity);
+            int compareValue = (int) Math.signum(((Result) o).similarity - similarity);
             // Bugfix after hint from Kai Jauslin
-            //if (compareValue == 0 && !(document.equals(((SimpleResult) o).document)))
-            //    compareValue = document.hashCode() - ((SimpleResult) o).document.hashCode();
+            if (compareValue == 0 && !(object.equals(((Result) o).getResult())))
+                compareValue = hashCode() - o.hashCode();
             return compareValue;
         }
     }

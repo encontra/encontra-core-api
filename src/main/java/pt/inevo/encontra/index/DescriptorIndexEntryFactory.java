@@ -2,33 +2,41 @@ package pt.inevo.encontra.index;
 
 import pt.inevo.encontra.descriptors.Descriptor;
 import pt.inevo.encontra.descriptors.DescriptorExtractor;
+import pt.inevo.encontra.storage.IEntity;
 
 /**
  * This decouples the Descriptor from the needed serialization
  * @param <O>
  */
-public abstract class DescriptorIndexEntryFactory<O extends AbstractObject,E extends IndexEntry> implements IndexEntryFactory<O,E>{
+public abstract class DescriptorIndexEntryFactory<O extends IndexedObject,E extends IndexEntry> extends IndexEntryFactory<O,E>{
 
     DescriptorExtractor extractor;
 
-    public DescriptorIndexEntryFactory(DescriptorExtractor extractor) {
+    public DescriptorIndexEntryFactory(Class entryClass, Class indexedObjectClass) {
+        super(entryClass,indexedObjectClass);
+    }
+
+    public void setExtractor(DescriptorExtractor extractor) {
         this.extractor=extractor;
     }
 
     public DescriptorExtractor getExtractor() {
         return extractor;
     }
-    
-    public E createIndexEntry(O object) {
-        assert (object.getObject() != null);
+
+
+    @Override
+    E setupIndexEntry(O object, E entry) {
+        assert (object != null);
         Descriptor descriptor=extractor.extract(object);
-        return createIndexEntry(object,descriptor);
+        if (object.getId() != null)
+            entry.setKey(object.getId().toString());
+        return setupIndexEntry(object,descriptor, entry);
     }
 
-    protected abstract E createIndexEntry(O object,Descriptor descriptor);
 
-    //public abstract Descriptor getDescriptor(E entry);
+    protected abstract E setupIndexEntry(O object, Descriptor descriptor, E entry);
 
-    public abstract Object getObjectId(E entry);
+   protected abstract O setupIndexedObject(E entry,O object);
 
 }

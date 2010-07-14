@@ -10,7 +10,7 @@ import pt.inevo.encontra.descriptors.Key;
  * @param <K>
  * @param <O>
  */
-public interface IndexComparator<K extends Key, O extends AbstractObject>
+public interface IndexComparator<K extends Key, O extends IndexedObject>
         extends Serializable, Comparator<K> {
 
     /**

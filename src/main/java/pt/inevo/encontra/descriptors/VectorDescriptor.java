@@ -3,7 +3,6 @@ package pt.inevo.encontra.descriptors;
 import pt.inevo.encontra.common.distance.DistanceMeasure;
 import pt.inevo.encontra.common.distance.HasDistance;
 import pt.inevo.encontra.common.distance.HasWeights;
-import pt.inevo.encontra.index.AbstractObject;
 import pt.inevo.encontra.index.IndexEntry;
 import pt.inevo.encontra.index.Vector;
 
@@ -13,7 +12,7 @@ import java.util.Arrays;
  * The Generic class for describing an EnContRA Descriptor.
  * @author ricardo
  */
-public abstract class VectorDescriptor<T extends Number> extends Vector<T> implements Descriptor<T>, HasWeights,Cloneable, Iterable<T> {
+public abstract class VectorDescriptor<T extends Number> extends Vector<T> implements Descriptor, HasWeights,Cloneable, Iterable<T> {
 
     protected double weights[];
     protected String id;
@@ -60,7 +59,7 @@ public abstract class VectorDescriptor<T extends Number> extends Vector<T> imple
      * @param descriptor
      * @return
      */
-    public double getDistance(Descriptor<T> descriptor) {
+    public double getDistance(Descriptor descriptor) {
         return distanceMeasure.distance(this,descriptor);
     }
 

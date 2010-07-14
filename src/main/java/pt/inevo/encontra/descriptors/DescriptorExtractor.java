@@ -1,16 +1,45 @@
 package pt.inevo.encontra.descriptors;
 
-import pt.inevo.encontra.index.AbstractObject;
+import pt.inevo.encontra.index.IndexedObject;
 
 
-public interface DescriptorExtractor<T extends AbstractObject, D extends Descriptor> {
+public abstract class DescriptorExtractor<O extends IndexedObject, D extends Descriptor> {
 
-    /**
-     * Computes the descriptor from the given object.
-     * @param object the object from which we want to determine the descriptor
-     * @return true if the operation completes succefully, or false otherwise
-     */
-    public D extract(T object);
+    private Class<O> indexObjectClass;
+    private Class<D> descriptorClass;
 
-    public D newDescriptor(Class<D> clazz);
+    public DescriptorExtractor(Class indexObjectClass,Class descriptorClass){
+        this.indexObjectClass=indexObjectClass;
+        this.descriptorClass=descriptorClass;
+    }
+
+
+    protected D newDescriptor() {
+        try {
+            return  descriptorClass.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        return null;
+    }
+
+    protected abstract O setupIndexedObject(D descriptor, O object);
+    public abstract D  extract(O object);
+
+    public O getIndexedObject(D descriptor) {
+        try {
+            O res=indexObjectClass.newInstance();
+            return setupIndexedObject(descriptor,res);
+        } catch (InstantiationException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        return null;
+    }
+
+
+
 }
