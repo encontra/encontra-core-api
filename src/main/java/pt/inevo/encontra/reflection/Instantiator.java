@@ -76,7 +76,7 @@ public class Instantiator<T> {
      * @return new instance of T (created by calling the default constructor)
      * @throws RuntimeException if T has no accessible default constructor
      */
-    private static <T> Class<T> getTemplateClass( Object object, int index ) {
+    public static <T> Class<T> getTemplateClass( Object object, int index ) {
         ParameterizedType superClass =
             (ParameterizedType )object.getClass().getGenericSuperclass();
         Type type = superClass.getActualTypeArguments()[ index ];
