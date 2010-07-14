@@ -34,8 +34,8 @@ public abstract class IndexEntryFactory<O extends IEntry,E extends IndexEntry> {
         return null;
     }
 
-    abstract E  setupIndexEntry(O object, E entry);
-    abstract O  setupObject(E entry, O object);
+    protected abstract E  setupIndexEntry(O object, E entry);
+    protected abstract O  setupObject(E entry, O object);
 
     public O getObject(E entry) {
         try {

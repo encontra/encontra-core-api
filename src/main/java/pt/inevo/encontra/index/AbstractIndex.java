@@ -14,7 +14,7 @@ import pt.inevo.encontra.storage.IEntry;
  */
 public abstract class AbstractIndex<E extends IEntry> implements Index<E>{
 
-    IndexEntryFactory<IndexedObject, ?> entryFactory;
+    protected IndexEntryFactory<IndexedObject, ?> entryFactory;
 
     public IndexEntryFactory getEntryFactory() {
         return entryFactory;
