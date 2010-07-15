@@ -1,9 +1,11 @@
 package pt.inevo.encontra.index;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import pt.inevo.encontra.reflection.Instantiator;
 
 /**
  * A Vector for numeric types
@@ -15,7 +17,12 @@ public class Vector<T extends Number> implements Cloneable, Iterable<T>{
 
     public Vector(int size) {
         this.size = size;
-        this.values = (T[]) new ArrayList<T>(size).toArray();
+        //this.values = (T[]) new ArrayList<T>(size).toArray();
+        //this.values = (T[]) new ArrayList<T>(size).toArray();
+        Class clazz=Instantiator.getTemplateClass(this, 0);
+        if(clazz==null)
+            clazz=Number.class;
+        this.values = (T[])Array.newInstance(clazz,size);
     }
 
     /** Construct a new instance using provided values */

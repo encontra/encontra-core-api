@@ -1,5 +1,6 @@
 package pt.inevo.encontra.common.distance;
 
+import java.io.Serializable;
 import pt.inevo.encontra.index.Vector;
 
 /**
@@ -8,7 +9,7 @@ import pt.inevo.encontra.index.Vector;
  * Thus, it is not actually the Euclidean Distance, but it is saves on computation when you only need the
  * distance for comparison and don't care about the actual value as a distance.
  */
-public class SquaredEuclideanDistanceMeasure<T extends Vector & HasDistance> implements DistanceMeasure<T> {
+public class SquaredEuclideanDistanceMeasure<T extends Vector & HasDistance> implements DistanceMeasure<T>, Serializable {
 
   @Override
   public double distance(T v1, T v2) {

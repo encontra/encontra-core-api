@@ -1,9 +1,7 @@
 package pt.inevo.encontra.descriptors;
 
 import pt.inevo.encontra.common.distance.DistanceMeasure;
-import pt.inevo.encontra.common.distance.HasDistance;
 import pt.inevo.encontra.common.distance.HasWeights;
-import pt.inevo.encontra.index.IndexEntry;
 import pt.inevo.encontra.index.Vector;
 
 import java.util.Arrays;
@@ -18,7 +16,6 @@ public abstract class VectorDescriptor<T extends Number> extends Vector<T> imple
     protected String id;
     protected DistanceMeasure distanceMeasure;
 
-
     public VectorDescriptor(int size) {
         this(size,"");
     }
@@ -30,12 +27,13 @@ public abstract class VectorDescriptor<T extends Number> extends Vector<T> imple
         Arrays.fill(weights,1.0);
     }
 
-
+    @Override
     public double [] getWeights() {
         return weights;
     }
 
 
+    @Override
     public void setWeights(double [] weights) {
         this.weights = weights;
     }
@@ -59,6 +57,7 @@ public abstract class VectorDescriptor<T extends Number> extends Vector<T> imple
      * @param descriptor
      * @return
      */
+    @Override
     public double getDistance(Descriptor descriptor) {
         return distanceMeasure.distance(this,descriptor);
     }

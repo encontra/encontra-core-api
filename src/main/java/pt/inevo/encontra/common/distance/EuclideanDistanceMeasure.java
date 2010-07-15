@@ -1,5 +1,6 @@
 package pt.inevo.encontra.common.distance;
 
+import java.io.Serializable;
 import pt.inevo.encontra.index.Vector;
 
 
