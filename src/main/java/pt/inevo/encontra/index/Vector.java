@@ -19,10 +19,11 @@ public class Vector<T extends Number> implements Cloneable, Iterable<T>{
         this.size = size;
         //this.values = (T[]) new ArrayList<T>(size).toArray();
         //this.values = (T[]) new ArrayList<T>(size).toArray();
-        Class clazz=Instantiator.getTemplateClass(this, 0);
-        if(clazz==null)
-            clazz=Number.class;
-        this.values = (T[])Array.newInstance(clazz,size);
+
+//        Class clazz=Instantiator.getTemplateClass(this, 0);
+//        if(clazz==null)
+//            clazz=Number.class;
+        this.values = (T[])Array.newInstance(Number.class,size);
     }
 
     /** Construct a new instance using provided values */

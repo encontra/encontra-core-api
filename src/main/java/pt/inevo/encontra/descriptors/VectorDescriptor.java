@@ -1,5 +1,6 @@
 package pt.inevo.encontra.descriptors;
 
+import java.io.Serializable;
 import pt.inevo.encontra.common.distance.DistanceMeasure;
 import pt.inevo.encontra.common.distance.HasWeights;
 import pt.inevo.encontra.index.Vector;
@@ -10,17 +11,17 @@ import java.util.Arrays;
  * The Generic class for describing an EnContRA Descriptor.
  * @author ricardo
  */
-public abstract class VectorDescriptor<T extends Number> extends Vector<T> implements Descriptor, HasWeights,Cloneable, Iterable<T> {
+public abstract class VectorDescriptor<ID extends Serializable, T extends Number> extends Vector<T> implements Descriptor, HasWeights,Cloneable, Iterable<T> {
 
     protected double weights[];
-    protected String id;
+    protected ID id;
     protected DistanceMeasure distanceMeasure;
 
     public VectorDescriptor(int size) {
-        this(size,"");
+        this(size, null);
     }
 
-    public VectorDescriptor(int size,String id){
+    public VectorDescriptor(int size,ID id){
         super(size);
         this.id=id;
         this.weights=new double[size];
@@ -48,7 +49,7 @@ public abstract class VectorDescriptor<T extends Number> extends Vector<T> imple
      * @return
      */
     @Override
-    public String getId() {
+    public ID getId() {
         return id;
     }
 
@@ -67,6 +68,4 @@ public abstract class VectorDescriptor<T extends Number> extends Vector<T> imple
      * @return
      */
     public abstract double[] getDoubleRepresentation();
-
-
 }
