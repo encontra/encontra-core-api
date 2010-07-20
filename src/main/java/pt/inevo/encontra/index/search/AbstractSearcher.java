@@ -1,7 +1,6 @@
 package pt.inevo.encontra.index.search;
 
 import pt.inevo.encontra.descriptors.Descriptor;
-import pt.inevo.encontra.descriptors.DescriptorExtractor;
 import pt.inevo.encontra.index.Index;
 import pt.inevo.encontra.index.IndexedObject;
 import pt.inevo.encontra.index.Result;

@@ -8,16 +8,16 @@ import pt.inevo.encontra.storage.IEntity;
  * This decouples the Descriptor from the needed serialization
  * @param <O>
  */
-public abstract class DescriptorIndexEntryFactory<O extends IndexedObject, E extends IndexEntry> extends IndexEntryFactory<O, E> {
+public abstract class DescriptorIndexEntryFactory<O extends IndexedObject,E extends IndexEntry> extends IndexEntryFactory<O,E>{
 
     DescriptorExtractor extractor;
 
     public DescriptorIndexEntryFactory(Class entryClass, Class indexedObjectClass) {
-        super(entryClass, indexedObjectClass);
+        super(entryClass,indexedObjectClass);
     }
 
     public void setExtractor(DescriptorExtractor extractor) {
-        this.extractor = extractor;
+        this.extractor=extractor;
     }
 
     public DescriptorExtractor getExtractor() {
@@ -36,5 +36,4 @@ public abstract class DescriptorIndexEntryFactory<O extends IndexedObject, E ext
 
     protected abstract E setupIndexEntry(O object, Descriptor descriptor, E entry);
 
-    protected abstract O setupIndexedObject(E entry, O object);
 }
