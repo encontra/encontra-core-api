@@ -4,7 +4,6 @@ import pt.inevo.encontra.index.ResultSet;
 import pt.inevo.encontra.query.Query;
 import pt.inevo.encontra.storage.EntityStorage;
 
-
 public interface Searcher<E> {
 
     /**
