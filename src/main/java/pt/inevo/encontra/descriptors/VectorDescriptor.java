@@ -6,6 +6,7 @@ import pt.inevo.encontra.common.distance.HasWeights;
 import pt.inevo.encontra.index.Vector;
 
 import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * The Generic class for describing an EnContRA Descriptor.
@@ -14,15 +15,15 @@ import java.util.Arrays;
 public abstract class VectorDescriptor<ID extends Serializable, T extends Number> extends Vector<T> implements Descriptor, HasWeights,Cloneable, Iterable<T> {
 
     protected double weights[];
-    protected ID id;
+    protected Serializable id;
     protected DistanceMeasure distanceMeasure;
 
-    public VectorDescriptor(int size) {
-        this(size, null);
+    public VectorDescriptor(Class<T> type, int size) {
+        this(type, size, null);
     }
 
-    public VectorDescriptor(int size,ID id){
-        super(size);
+    public VectorDescriptor(Class<T> type, int size,Serializable id){
+        super(type, size);
         this.id=id;
         this.weights=new double[size];
         Arrays.fill(weights,1.0);
@@ -33,15 +34,18 @@ public abstract class VectorDescriptor<ID extends Serializable, T extends Number
         return weights;
     }
 
-
     @Override
     public void setWeights(double [] weights) {
         this.weights = weights;
     }
 
     public abstract DistanceMeasure getDistanceMeasure();
-    
-    public abstract Descriptor setStringRepresentation(String descriptor);
+
+    /**
+     * Gets a Double array representation of the Descriptor.
+     * @return
+     */
+    public abstract Collection<T> getValues(Class<T> type);
 
     /**
      * Gets the Descriptor type. The type is represented by the Descriptor class
@@ -49,7 +53,7 @@ public abstract class VectorDescriptor<ID extends Serializable, T extends Number
      * @return
      */
     @Override
-    public ID getId() {
+    public Serializable getId() {
         return id;
     }
 
@@ -62,10 +66,4 @@ public abstract class VectorDescriptor<ID extends Serializable, T extends Number
     public double getDistance(Descriptor descriptor) {
         return distanceMeasure.distance(this,descriptor);
     }
-
-    /**
-     * Gets a Double array representation of the Descriptor. (maintain?)
-     * @return
-     */
-    public abstract double[] getDoubleRepresentation();
 }

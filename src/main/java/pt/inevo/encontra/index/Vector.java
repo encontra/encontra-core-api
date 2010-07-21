@@ -1,35 +1,31 @@
 package pt.inevo.encontra.index;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import pt.inevo.encontra.reflection.Instantiator;
 
 /**
  * A Vector for numeric types
  * @param <T>
  */
 public class Vector<T extends Number> implements Cloneable, Iterable<T>{
-    private int size;
-    private T[] values;
 
-    public Vector(int size) {
+    protected int size;
+    protected T[] values;
+    protected Class<T> typeT;
+
+    public Vector(Class<T> type, int size) {
         this.size = size;
-        //this.values = (T[]) new ArrayList<T>(size).toArray();
-        //this.values = (T[]) new ArrayList<T>(size).toArray();
-
-//        Class clazz=Instantiator.getTemplateClass(this, 0);
-//        if(clazz==null)
-//            clazz=Number.class;
-        this.values = (T[])Array.newInstance(Number.class,size);
+        this.values = (T[])Array.newInstance(type,size);
+        this.typeT = type;
     }
 
     /** Construct a new instance using provided values */
-    public Vector(T[] values) {
+    public Vector(Class<T> type, T[] values) {
         this.values = values;
         this.size = values.length;
+        this.typeT = type;
     }
 
     public int size() {
@@ -108,7 +104,7 @@ public class Vector<T extends Number> implements Cloneable, Iterable<T>{
     }
     @Override
     public Vector<T> clone() {
-        return new Vector<T>(values.clone());
+        return new Vector<T>(typeT, values.clone());
     }
 
     /**

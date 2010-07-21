@@ -64,7 +64,4 @@ public abstract class DescriptorExtractor<O extends IEntity, D extends Descripto
         }
         return null;
     }
-
-
-
 }
