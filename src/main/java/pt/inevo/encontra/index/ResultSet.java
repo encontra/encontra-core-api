@@ -97,12 +97,14 @@ public class ResultSet<T> implements Collection<Result<T>> {
 
     // TODO - Precalculate maxScore in ResultSet
     public void normalizeScores(){
-        double maxScore=Double.NEGATIVE_INFINITY;
+        double maxScore=0;
         for (Result result : results) {
             if(result.getSimilarity()>maxScore){
                 maxScore=result.getSimilarity();
             }
         }
+        if(maxScore==0) // Avoid division by zero
+            return;
         for (Result result : results) {
             result.setSimilarity(result.getSimilarity() / maxScore);
         }

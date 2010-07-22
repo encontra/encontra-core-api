@@ -19,7 +19,7 @@ public abstract class DescriptorExtractor<O extends IEntity, D extends Descripto
 
     public Class<O> getIndexObjectClass() {
          if(indexObjectClass==null){
-            indexObjectClass=Instantiator.getTemplateClass(this,1);
+            indexObjectClass=Instantiator.getTemplateClass(this,0);
         }
         return indexObjectClass;
     }
