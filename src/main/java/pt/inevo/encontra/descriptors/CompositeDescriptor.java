@@ -33,7 +33,7 @@ public class CompositeDescriptor implements Descriptor {
     }
 
     @Override
-    public double getDistance( Descriptor d) {
+    public double getDistance(Descriptor d) {
         CompositeDescriptor other=(CompositeDescriptor) d;
         double distance = 0f;
         int descriptorCount = 0;
@@ -86,7 +86,6 @@ public class CompositeDescriptor implements Descriptor {
        this.id=id;
     }
 
-
     public List<Descriptor> getDescriptors() {
         return descriptors;
     }
@@ -113,6 +112,7 @@ public class CompositeDescriptor implements Descriptor {
         }
         return null;
     }
+    
     @Override
     public void setValue(Object val) {
        if(val instanceof IEntry[]){

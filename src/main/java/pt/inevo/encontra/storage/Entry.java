@@ -22,6 +22,7 @@ public class Entry<ID extends Serializable,V> implements IEntry<ID,V>{
      * Gets the object of this object.
      * @return the object
      */
+    @Override
     public V getValue() {
         return object;
     }
@@ -29,6 +30,7 @@ public class Entry<ID extends Serializable,V> implements IEntry<ID,V>{
     /**
      * @param object the object to set
      */
+    @Override
     public void setValue(V object) {
         this.object = object;
     }
@@ -36,6 +38,7 @@ public class Entry<ID extends Serializable,V> implements IEntry<ID,V>{
     /**
      * @return the id
      */
+    @Override
     public ID getId() {
         return id;
     }

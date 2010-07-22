@@ -1,6 +1,5 @@
 package pt.inevo.encontra.descriptors;
 
-import pt.inevo.encontra.index.IndexedObject;
 import pt.inevo.encontra.reflection.Instantiator;
 import pt.inevo.encontra.storage.IEntity;
 
