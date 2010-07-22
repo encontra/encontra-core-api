@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 public interface Descriptor extends HasDistance<Descriptor>, IEntry {
     
-    String getName();
+    public String getName();
 
     /**
      * Gets a String representation of the Descriptor.
