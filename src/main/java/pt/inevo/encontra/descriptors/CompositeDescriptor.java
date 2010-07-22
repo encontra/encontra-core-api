@@ -124,5 +124,6 @@ public class CompositeDescriptor implements Descriptor {
         } else {
            throw new NotImplementedException();
         }
+        return;
     }
 }

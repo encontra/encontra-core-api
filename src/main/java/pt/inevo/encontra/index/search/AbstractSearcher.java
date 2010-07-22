@@ -22,6 +22,10 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
     }
 
 
+    public Index getIndex(Index index){
+        return index;
+    }
+
     @Override
     public void setObjectStorage(EntityStorage storage) {
         this.storage=storage;
