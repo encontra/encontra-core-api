@@ -1,12 +1,8 @@
 package pt.inevo.encontra.engine;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import pt.inevo.encontra.descriptors.Descriptor;
 import pt.inevo.encontra.index.*;
 import pt.inevo.encontra.index.search.AbstractSearcher;
 import pt.inevo.encontra.index.search.Searcher;
@@ -23,7 +19,6 @@ public class Engine<O extends IEntity> extends AbstractSearcher<O> {
 
     IndexedObjectFactory indexedObjectFactory;
     EntityStorage storage;
-
     protected Searcher searcher;
 
     public Engine() {
@@ -31,32 +26,32 @@ public class Engine<O extends IEntity> extends AbstractSearcher<O> {
     }
 
     private void init() {
-
     }
 
-    public void setObjectStorage(EntityStorage storage){
+    @Override
+    public void setObjectStorage(EntityStorage storage) {
         this.storage = storage;
     }
-
 
     /**
      * Insert the into the Engine. This makes the object to be inserted into all
      * the indexes registered in the Engine.
      * @param object
      */
+    @Override
     public boolean insert(O object) {
-        object=(O)storage.save(object);
-        if(object instanceof IndexedObject){
+        object = (O) storage.save(object);
+        if (object instanceof IndexedObject) {
             searcher.insert(object);
         } else {
             try {
                 //storage.save(object);
-                List<IndexedObject> indexedObjects=indexedObjectFactory.processBean(object);
-                for(IndexedObject obj : indexedObjects){
+                List<IndexedObject> indexedObjects = indexedObjectFactory.processBean(object);
+                for (IndexedObject obj : indexedObjects) {
                     searcher.insert(obj);
                 }
             } catch (IndexingException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                e.printStackTrace();
             }
         }
 
@@ -69,11 +64,10 @@ public class Engine<O extends IEntity> extends AbstractSearcher<O> {
      * @param object
      *
     public void removeObject(AbstractObject object) {
-        for (Index idx : indexes) {
-            idx.remove(object);
-        }
+    for (Index idx : indexes) {
+    idx.remove(object);
+    }
     }*/
-
     /**
      * Checks if an object exists in the Engine. If one of the registered
      * indexes contains the object than it returns true. It only returns false,
@@ -81,17 +75,16 @@ public class Engine<O extends IEntity> extends AbstractSearcher<O> {
      * @param object
      * @return
      */
-    public boolean contains(O object){
-        return (storage.get((Serializable)object.getId())!=null);
+    public boolean contains(O object) {
+        return (storage.get((Serializable) object.getId()) != null);
     }
-
-
 
     @Override
     public ResultSet<O> search(Query query) {
         return getResultObjects(searcher.search(query));
     }
 
+    @Override
     public EntityStorage getObjectStorage() {
         return storage;
     }

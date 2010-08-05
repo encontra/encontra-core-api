@@ -57,24 +57,9 @@ public class CompositeDescriptor implements Descriptor {
         return name;
     }
 
-
     public void setName(String name) {
         this.name=name;
     }
-
-
-    
-    /*
-    @Override
-    public double[] getWeights() {
-        return weights;
-    }
-
-    @Override
-    public void setWeights(double[] weights) {
-        this.weights=weights;
-    }*/
-
 
     @Override
     public Serializable getId() {

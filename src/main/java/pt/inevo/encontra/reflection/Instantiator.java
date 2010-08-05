@@ -1,6 +1,7 @@
 package pt.inevo.encontra.reflection;
 
 import java.lang.reflect.*;
+import sun.reflect.generics.reflectiveObjects.TypeVariableImpl;
 
 public class Instantiator<T> {
     /** Constructor objects of type T needed for instantiating objects */
@@ -80,7 +81,7 @@ public class Instantiator<T> {
         ParameterizedType superClass =
             (ParameterizedType )object.getClass().getGenericSuperclass();
         Type type = superClass.getActualTypeArguments()[ index ];
-        Class<T > instanceType;
+        Class<T> instanceType;
         if( type instanceof ParameterizedType ) {
             instanceType = (Class<T> )( (ParameterizedType )type ).getRawType();
         }

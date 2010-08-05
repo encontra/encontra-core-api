@@ -1,11 +1,6 @@
 package pt.inevo.encontra.index;
 
 import pt.inevo.encontra.storage.IEntry;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
-import java.util.ArrayList;
-import java.util.List;
-
 
 /**
  * Encontra IndexEntry Builder
@@ -13,7 +8,7 @@ import java.util.List;
 public abstract class IndexEntryFactory<O extends IEntry,E extends IndexEntry> { //extends MultiIndexHandler<IndexWriter>{
 
     private Class<E> indexEntryClass;
-    private Class<O> objectClass;
+    protected Class<O> objectClass;
 
     public IndexEntryFactory(Class entryClass,Class objectClass){
         this.indexEntryClass=entryClass;
@@ -27,9 +22,9 @@ public abstract class IndexEntryFactory<O extends IEntry,E extends IndexEntry> {
             E  entry = indexEntryClass.newInstance();
             return setupIndexEntry(object,entry);
         } catch (InstantiationException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         } catch (IllegalAccessException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         return null;
     }
@@ -42,9 +37,9 @@ public abstract class IndexEntryFactory<O extends IEntry,E extends IndexEntry> {
             O res=objectClass.newInstance();
             return setupObject(entry,res);
         } catch (InstantiationException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         } catch (IllegalAccessException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         return null;
     }

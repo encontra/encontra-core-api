@@ -1,8 +1,6 @@
 package pt.inevo.encontra.common.distance;
 
-import java.io.Serializable;
 import pt.inevo.encontra.index.Vector;
-
 
 /**
  * This class implements a Euclidean distance metric by summing the square root of the squared differences

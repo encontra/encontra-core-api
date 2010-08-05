@@ -1,11 +1,9 @@
 package pt.inevo.encontra.index;
 
-
 import pt.inevo.encontra.storage.IEntity;
 
 import java.io.Serializable;
 import java.util.List;
-
 
 public interface IndexedObjectFactory {
 
@@ -22,6 +20,5 @@ public interface IndexedObjectFactory {
         }
     }
     public List<IndexedObject> processBean(IEntity bean) throws IndexingException;
-
 
 }

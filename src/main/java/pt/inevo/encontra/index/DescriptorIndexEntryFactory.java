@@ -2,7 +2,6 @@ package pt.inevo.encontra.index;
 
 import pt.inevo.encontra.descriptors.Descriptor;
 import pt.inevo.encontra.descriptors.DescriptorExtractor;
-import pt.inevo.encontra.storage.IEntity;
 
 /**
  * This decouples the Descriptor from the needed serialization

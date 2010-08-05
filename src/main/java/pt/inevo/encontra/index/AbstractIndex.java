@@ -1,10 +1,6 @@
 package pt.inevo.encontra.index;
 
-import pt.inevo.encontra.descriptors.DescriptorExtractor;
-import pt.inevo.encontra.storage.EntityStorage;
-import pt.inevo.encontra.storage.IEntity;
 import pt.inevo.encontra.storage.IEntry;
-
 
 /**
  * Generic index structure.
@@ -12,7 +8,7 @@ import pt.inevo.encontra.storage.IEntry;
  * interface, for insert, remove, list, and search through it;
  * @author ricardo
  */
-public abstract class AbstractIndex<E extends IEntry> implements Index<E>{
+public abstract class AbstractIndex<E extends IEntry> implements Index<E> {
 
     protected IndexEntryFactory<IndexedObject, ?> entryFactory;
 
@@ -23,5 +19,4 @@ public abstract class AbstractIndex<E extends IEntry> implements Index<E>{
     public void setEntryFactory(IndexEntryFactory entryFactory) {
         this.entryFactory = entryFactory;
     }
-
 }

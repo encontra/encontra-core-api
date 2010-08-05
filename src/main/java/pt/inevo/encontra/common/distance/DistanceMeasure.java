@@ -1,8 +1,8 @@
 package pt.inevo.encontra.common.distance;
 
-
 /** This interface is used for objects which can determine a distance metric between two points */
 public interface DistanceMeasure<T extends HasDistance> {
+
     /**
      * Returns the distance metric applied to the arguments
      *

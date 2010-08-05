@@ -6,7 +6,6 @@ import pt.inevo.encontra.common.distance.HasWeights;
 import pt.inevo.encontra.index.Vector;
 
 import java.util.Arrays;
-import java.util.Collection;
 
 /**
  * The Generic class for describing an EnContRA Descriptor.
@@ -40,12 +39,6 @@ public abstract class VectorDescriptor<ID extends Serializable, T extends Number
     }
 
     public abstract DistanceMeasure getDistanceMeasure();
-
-    /**
-     * Gets a Double array representation of the Descriptor.
-     * @return
-     */
-    public abstract Collection<T> getValues(Class<T> type);
 
     /**
      * Gets the Descriptor type. The type is represented by the Descriptor class

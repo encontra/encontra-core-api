@@ -1,31 +1,28 @@
 package pt.inevo.encontra.index;
 
 import pt.inevo.encontra.storage.Entry;
-import pt.inevo.encontra.storage.IEntity;
-import pt.inevo.encontra.storage.IEntry;
-
 import java.io.Serializable;
-
 
 /**
  * Meta-Object of the framework
  * @author ricardo
  */
-public class IndexedObject<ID extends Serializable,O> extends Entry<ID,O> {
+public class IndexedObject<ID extends Serializable, O> extends Entry<ID, O> {
 
     protected String name;
     public double boost;
 
-
-    public IndexedObject(ID id,String name, O obj, double boost){
-        super(id,obj);
-        this.name=name;
-        this.boost=boost;
+    public IndexedObject(ID id, String name, O obj, double boost) {
+        super(id, obj);
+        this.name = name;
+        this.boost = boost;
     }
-    public IndexedObject(){}
 
-    public IndexedObject(ID identifier, O object){
-        super(identifier,object);
+    public IndexedObject() {
+    }
+
+    public IndexedObject(ID identifier, O object) {
+        super(identifier, object);
     }
 
     public String getName() {

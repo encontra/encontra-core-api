@@ -1,14 +1,16 @@
 package pt.inevo.encontra.descriptors;
 
+import java.io.Serializable;
+
 /**
  * Key -> element in the (Key, Descriptor) pair.
  * @author ricardo
  */
-public class Key<T> {
+public class Key<K extends Serializable> implements Serializable {
 
-    protected T keyValue;
+    protected K keyValue;
 
-    public Key(T key){
+    public Key(K key){
         this.keyValue = key;
     }
 
@@ -16,15 +18,14 @@ public class Key<T> {
      * Gets the value of this key
      * @return the keyValue
      */
-    public T getKeyValue() {
+    public K getKeyValue() {
         return keyValue;
     }
 
     /**
      * @param keyValue the keyValue to set
      */
-    public void setKeyValue(T keyValue) {
+    public void setKeyValue(K keyValue) {
         this.keyValue = keyValue;
-    }
-    
+    }   
 }

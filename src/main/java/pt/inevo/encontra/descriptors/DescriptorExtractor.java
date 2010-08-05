@@ -3,11 +3,10 @@ package pt.inevo.encontra.descriptors;
 import pt.inevo.encontra.reflection.Instantiator;
 import pt.inevo.encontra.storage.IEntity;
 
-
 public abstract class DescriptorExtractor<O extends IEntity, D extends Descriptor> {
 
-    private Class<O> indexObjectClass=null;
-    private Class<D> descriptorClass=null;
+    protected Class<O> indexObjectClass=null;
+    protected Class<D> descriptorClass=null;
 
     public DescriptorExtractor(){}
     
@@ -42,9 +41,9 @@ public abstract class DescriptorExtractor<O extends IEntity, D extends Descripto
         try {
             return  getDescriptorClass().newInstance();
         } catch (InstantiationException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         } catch (IllegalAccessException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         return null;
     }
@@ -57,9 +56,9 @@ public abstract class DescriptorExtractor<O extends IEntity, D extends Descripto
             O res=getIndexObjectClass().newInstance();
             return setupIndexedObject(descriptor,res);
         } catch (InstantiationException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         } catch (IllegalAccessException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         return null;
     }
