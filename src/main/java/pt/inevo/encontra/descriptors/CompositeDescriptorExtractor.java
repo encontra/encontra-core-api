@@ -7,18 +7,23 @@ import java.util.List;
 
 public class CompositeDescriptorExtractor<O extends IEntity> extends DescriptorExtractor<O, CompositeDescriptor> {
 
-    private List<DescriptorExtractor<O, Descriptor>> extractors = new ArrayList<DescriptorExtractor<O, Descriptor>>();
-    List<Double> weights = new ArrayList<Double>();
+    protected List<DescriptorExtractor<O, Descriptor>> extractors = new ArrayList<DescriptorExtractor<O, Descriptor>>();
+    protected List<Double> weights = new ArrayList<Double>();
+    
 
     public CompositeDescriptorExtractor(){}
 
-    public void addExtractor(DescriptorExtractor<O, Descriptor> d, double weight) {
-        extractors.add(d);
-        weights.add(weight);
+    public CompositeDescriptorExtractor(Class<O> indexedObjectclass){
+        super(indexedObjectclass, null);
     }
 
     public CompositeDescriptorExtractor(Class<O> indexedObjectClass, Class descriptorClass) {
         super(indexedObjectClass, descriptorClass);
+    }
+
+    public void addExtractor(DescriptorExtractor<O, Descriptor> d, double weight) {
+        extractors.add(d);
+        weights.add(weight);
     }
 
     @Override
