@@ -40,7 +40,9 @@ public class Engine<O extends IEntity> extends AbstractSearcher<O> {
      */
     @Override
     public boolean insert(O object) {
-        object = (O) storage.save(object);
+        O res = (O) storage.save(object);
+        object.setId(res.getId());
+        System.out.println("Saved object with ID "+res.getId());
         if (object instanceof IndexedObject) {
             searcher.insert(object);
         } else {
