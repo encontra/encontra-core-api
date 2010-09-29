@@ -73,8 +73,17 @@ public class CombinedSearcher<E extends IndexedObject> implements Searcher<E> {
         if (searcher == null){
             return false;
         }
-        searcher.insert(entry);
-        return true;
+        return searcher.insert(entry);
+    }
+
+    @Override
+    public boolean remove(E entry){
+        String name = entry.getName();
+        Searcher searcher = searcherMap.get(name);
+        if (searcher == null){
+            return false;
+        }
+        return searcher.remove(entry);
     }
 
     @Override

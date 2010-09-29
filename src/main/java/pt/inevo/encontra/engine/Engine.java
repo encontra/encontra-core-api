@@ -47,7 +47,6 @@ public class Engine<O extends IEntity> extends AbstractSearcher<O> {
             searcher.insert(object);
         } else {
             try {
-                //storage.save(object);
                 List<IndexedObject> indexedObjects = indexedObjectFactory.processBean(object);
                 for (IndexedObject obj : indexedObjects) {
                     searcher.insert(obj);
@@ -64,12 +63,27 @@ public class Engine<O extends IEntity> extends AbstractSearcher<O> {
      * Remove the object from the Engine. This makes the object to be removed
      * from all the indexes registered in the Engine.
      * @param object
-     *
-    public void removeObject(AbstractObject object) {
-    for (Index idx : indexes) {
-    idx.remove(object);
+     * */
+    @Override
+    public boolean remove(O object) {
+        storage.delete(object);
+        System.out.println("Removed object from storage with ID " +object.getId());
+
+        if (object instanceof IndexedObject) {
+            searcher.remove(object);
+        } else {
+            try {
+                List<IndexedObject> indexedObjects = indexedObjectFactory.processBean(object);
+                for (IndexedObject obj : indexedObjects) {
+                    searcher.remove(obj);
+                }
+            } catch (IndexingException e) {
+                e.printStackTrace();
+            }
+        }
+        return true;
     }
-    }*/
+
     /**
      * Checks if an object exists in the Engine. If one of the registered
      * indexes contains the object than it returns true. It only returns false,

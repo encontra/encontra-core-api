@@ -1,5 +1,6 @@
 package pt.inevo.encontra.index.search;
 
+import pt.inevo.encontra.index.IndexedObject;
 import pt.inevo.encontra.index.ResultSet;
 import pt.inevo.encontra.query.Query;
 import pt.inevo.encontra.storage.EntityStorage;
@@ -13,6 +14,8 @@ public interface Searcher<E> {
     public ResultSet<E> search(Query query);
 
     public boolean insert(E entry);
+
+    public boolean remove(E obj);
 
     public void setObjectStorage(EntityStorage storage);
 
