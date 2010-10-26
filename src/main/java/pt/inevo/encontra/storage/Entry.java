@@ -8,6 +8,7 @@ import java.io.Serializable;
  * @param <V>
  */
 public class Entry<ID extends Serializable,V> implements IEntry<ID,V>{
+    
     protected V object=null;
     protected ID id=null;
 

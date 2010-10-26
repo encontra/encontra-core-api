@@ -1,7 +1,6 @@
 package pt.inevo.encontra.reflection;
 
 import java.lang.reflect.*;
-import sun.reflect.generics.reflectiveObjects.TypeVariableImpl;
 
 public class Instantiator<T> {
     /** Constructor objects of type T needed for instantiating objects */

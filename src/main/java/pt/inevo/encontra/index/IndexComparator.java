@@ -2,7 +2,6 @@ package pt.inevo.encontra.index;
 
 import java.io.Serializable;
 import java.util.Comparator;
-import pt.inevo.encontra.descriptors.Key;
 
 /**
  * Object that compares the elements in the Index.
@@ -10,7 +9,7 @@ import pt.inevo.encontra.descriptors.Key;
  * @param <K>
  * @param <O>
  */
-public interface IndexComparator<K extends Key, O extends IndexedObject>
+public interface IndexComparator<K extends Serializable, O extends IndexedObject>
         extends Serializable, Comparator<K> {
 
     /**

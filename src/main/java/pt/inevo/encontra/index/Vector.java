@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * A Vector for numeric types
+ * A Vector for numeric types.
  * @param <T>
  */
 public class Vector<T extends Number> implements Cloneable, Iterable<T>{

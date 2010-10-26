@@ -4,13 +4,14 @@ import pt.inevo.encontra.storage.Entry;
 import java.io.Serializable;
 
 /**
- * Meta-Object of the framework
+ * Meta-Object of the framework.
+ * Represent an element that can be indexed in the framework.
  * @author ricardo
  */
 public class IndexedObject<ID extends Serializable, O> extends Entry<ID, O> {
 
     protected String name;
-    public double boost;
+    protected double boost;
 
     public IndexedObject(ID id, String name, O obj, double boost) {
         super(id, obj);

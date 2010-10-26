@@ -1,10 +1,14 @@
 package pt.inevo.encontra.index.search;
 
-import pt.inevo.encontra.index.IndexedObject;
 import pt.inevo.encontra.index.ResultSet;
 import pt.inevo.encontra.query.Query;
 import pt.inevo.encontra.storage.EntityStorage;
 
+/**
+ * Generic interface for the searcher.
+ * @author Ricardo
+ * @param <E>
+ */
 public interface Searcher<E> {
 
     /**

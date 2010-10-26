@@ -8,10 +8,15 @@ import pt.inevo.encontra.storage.EntityStorage;
 import pt.inevo.encontra.storage.IEntity;
 import pt.inevo.encontra.storage.IEntry;
 
+/**
+ * AbstractSearcher with common functions implemented.
+ * @author Ricardo
+ * @param <O>
+ */
 public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O> {
 
     protected Index<Descriptor> index;
-    EntityStorage storage;
+    protected EntityStorage storage;
 
     public void setIndex(Index index) {
         this.index = index;
@@ -32,13 +37,19 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
     }
 
     /**
-     * Get a Result with an Object instead of the IndexedObject
+     * Get a Result with an Object instead of the IndexedObject. Must be
+     * implemented by all the concret searchers.
      * @param idx
      * @param indexEntryresult
      * @return
      */
     protected abstract Result<O> getResultObject(Result<IEntry> indexEntryresult);
 
+    /**
+     * Gets all the Results with an IEntity instead of the IEntry object.
+     * @param indexEntryResultSet
+     * @return
+     */
     protected ResultSet<O> getResultObjects(ResultSet<IEntry> indexEntryResultSet) {
         ResultSet<O> results = new ResultSet<O>();
 

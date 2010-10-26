@@ -1,17 +1,13 @@
 package pt.inevo.encontra.storage;
 
-
 import java.io.Serializable;
-import java.util.List;
-
 
 /**
  * Entry storage interface
- * @param <I>
- * @param <O>
+ * @param <I> entry's key
+ * @param <O> entry to be saved
  */
 public interface EntityStorage<I extends Serializable,O extends IEntity<I>> {
-
 
     /**
      * Retrieve an persisted object using the given id as primary key.
@@ -21,17 +17,20 @@ public interface EntityStorage<I extends Serializable,O extends IEntity<I>> {
      * @param id object's primary key
      * @return object
      */
-    O get(I id);
-
+    public O get(I id);
 
      /**
      * Save all changes made to an object.
      *
      * @param object object
      */
-    O save(O object);
+    public O save(O object);
 
-
+    /**
+     * Save all changes made to several object.
+     *
+     * @param objects the objects to be saved
+     */
     public void save(final O... objects);
     
     /**
@@ -40,5 +39,5 @@ public interface EntityStorage<I extends Serializable,O extends IEntity<I>> {
      *
      * @param object object
      */
-    void delete(O object);
+    public void delete(O object);
 }

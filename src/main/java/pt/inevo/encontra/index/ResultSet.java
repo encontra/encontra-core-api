@@ -11,36 +11,37 @@ public class ResultSet<T> implements Collection<Result<T>> {
 
     private SortedSet<Result<T>> results;
 
-    public ResultSet(){
+    public ResultSet() {
         this(new ArrayList<Result<T>>());
     }
 
-    public ResultSet(List<Result<T>> results){
-        this.results=Collections.synchronizedSortedSet(new TreeSet<Result<T>>());
+    public ResultSet(List<Result<T>> results) {
+        this.results = Collections.synchronizedSortedSet(new TreeSet<Result<T>>());
         this.results.addAll(results);
     }
 
-    public boolean contains(Result<T> res){
+    public boolean contains(Result<T> res) {
         return (indexOf(res) >= 0);
     }
 
-    public int indexOf(Result<T> res){
+    public int indexOf(Result<T> res) {
         Iterator<Result<T>> iterator = results.iterator();
-        int i=0;
+        int i = 0;
         Result<T> r;
-        while(iterator.hasNext() && !iterator.next().equals(res)){
+        while (iterator.hasNext() && !iterator.next().equals(res)) {
             i++;
         }
-        if(i>=size())
+        if (i >= size()) {
             return -1;
+        }
         return i;
     }
 
-    public Result<T> get(int index){
+    public Result<T> get(int index) {
         Iterator<Result<T>> iterator = results.iterator();
-        while(true){
-            if(iterator.hasNext()) {
-                if(index==0){
+        while (true) {
+            if (iterator.hasNext()) {
+                if (index == 0) {
                     return iterator.next();
                 }
                 iterator.next();
@@ -52,9 +53,9 @@ public class ResultSet<T> implements Collection<Result<T>> {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         String resultSet = "[";
-        for (Result res: results){
+        for (Result res : results) {
             resultSet += res.toString() + ", ";
         }
         resultSet += "]";
@@ -62,7 +63,7 @@ public class ResultSet<T> implements Collection<Result<T>> {
         return resultSet;
     }
 
-    private float sigmoid(float f) {
+    protected float sigmoid(float f) {
         double result = 0f;
         result = -1d + 2d / (1d + Math.exp(-2d * f / 0.6));
         return (float) (1d - result);
@@ -82,11 +83,11 @@ public class ResultSet<T> implements Collection<Result<T>> {
         return get(position).getSimilarity();
     }
 
-    public void invertScores(){
-        List<Result<T>> invertedResults=new ArrayList<Result<T>>();
-        int size=size();
-        for (int i=0;i<size;i++){
-            Result r=get(i);
+    public void invertScores() {
+        List<Result<T>> invertedResults = new ArrayList<Result<T>>();
+        int size = size();
+        for (int i = 0; i < size; i++) {
+            Result r = get(i);
             invertedResults.add(r);
 
             r.setSimilarity(1f - r.getSimilarity());
@@ -96,15 +97,17 @@ public class ResultSet<T> implements Collection<Result<T>> {
     }
 
     // TODO - Precalculate maxScore in ResultSet
-    public void normalizeScores(){
-        double maxScore=0;
+    public void normalizeScores() {
+        double maxScore = 0;
         for (Result result : results) {
-            if(result.getSimilarity()>maxScore){
-                maxScore=result.getSimilarity();
+            if (result.getSimilarity() > maxScore) {
+                maxScore = result.getSimilarity();
             }
         }
-        if(maxScore==0) // Avoid division by zero
+        if (maxScore == 0) // Avoid division by zero
+        {
             return;
+        }
         for (Result result : results) {
             result.setSimilarity(result.getSimilarity() / maxScore);
         }
@@ -122,7 +125,12 @@ public class ResultSet<T> implements Collection<Result<T>> {
 
     @Override
     public boolean contains(Object o) {
-        return results.contains(o);
+        if (o instanceof Result) {
+            Result r = (Result) o;
+            return results.contains(r);
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -137,7 +145,7 @@ public class ResultSet<T> implements Collection<Result<T>> {
 
     @Override
     public <T> T[] toArray(T[] a) {
-        return  (T[]) results.toArray(a);
+        return (T[]) results.toArray(a);
     }
 
     @Override
@@ -148,9 +156,15 @@ public class ResultSet<T> implements Collection<Result<T>> {
     public boolean remove(int idx) {
         return results.remove(get(idx));
     }
+
     @Override
     public boolean remove(Object o) {
-        return results.remove(o);
+        if (o instanceof Result) {
+            Result r = (Result) o;
+            return results.remove(r);
+        } else {
+            return false;
+        }
     }
 
     @Override

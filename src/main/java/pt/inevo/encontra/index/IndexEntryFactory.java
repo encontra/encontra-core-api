@@ -3,9 +3,9 @@ package pt.inevo.encontra.index;
 import pt.inevo.encontra.storage.IEntry;
 
 /**
- * Encontra IndexEntry Builder
+ * Encontra IndexEntry Builder.
  */
-public abstract class IndexEntryFactory<O extends IEntry,E extends IndexEntry> { //extends MultiIndexHandler<IndexWriter>{
+public abstract class IndexEntryFactory<O extends IEntry,E extends IndexEntry> {
 
     private Class<E> indexEntryClass;
     protected Class<O> objectClass;

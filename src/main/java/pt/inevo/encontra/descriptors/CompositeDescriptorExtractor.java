@@ -10,7 +10,6 @@ public class CompositeDescriptorExtractor<O extends IEntity> extends DescriptorE
     protected List<DescriptorExtractor<O, Descriptor>> extractors = new ArrayList<DescriptorExtractor<O, Descriptor>>();
     protected List<Double> weights = new ArrayList<Double>();
     
-
     public CompositeDescriptorExtractor(){}
 
     public CompositeDescriptorExtractor(Class<O> indexedObjectclass){

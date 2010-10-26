@@ -24,21 +24,4 @@ public interface Index<E extends IEntry> extends EntityStorage, EntryProvider<E>
      * @return the success of the operation
      */
     public boolean remove(E entry);
-
-//    public int size();
-
-//    public E get(int idx);
-
-    /**
-     * Checks if an object already exists in the index.
-     * @param entry the to be checked
-     * @return true if already exists, or false otherwise
-     */
-//    public boolean contains(E entry);
-
-    /**
-     * Obtains all the objects that are within the index
-     * @return a list with all the objects
-     */
-//    public List<E> getAll();
 }

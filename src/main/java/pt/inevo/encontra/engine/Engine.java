@@ -12,13 +12,13 @@ import pt.inevo.encontra.storage.IEntity;
 import pt.inevo.encontra.storage.IEntry;
 
 /**
- * Entry point of the engine
+ * Entry point of the framework.
+ * An Engine is searcheable (we can search through different indexes).
  * @author ricardo
  */
 public class Engine<O extends IEntity> extends AbstractSearcher<O> {
 
-    IndexedObjectFactory indexedObjectFactory;
-    EntityStorage storage;
+    protected IndexedObjectFactory indexedObjectFactory;
     protected Searcher searcher;
 
     public Engine() {
