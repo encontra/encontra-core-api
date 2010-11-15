@@ -5,7 +5,6 @@ import java.util.List;
 
 import pt.inevo.encontra.index.*;
 import pt.inevo.encontra.index.search.AbstractSearcher;
-import pt.inevo.encontra.index.search.Searcher;
 import pt.inevo.encontra.query.Query;
 import pt.inevo.encontra.storage.EntityStorage;
 import pt.inevo.encontra.storage.IEntity;
@@ -19,14 +18,13 @@ import pt.inevo.encontra.storage.IEntry;
 public class Engine<O extends IEntity> extends AbstractSearcher<O> {
 
     protected IndexedObjectFactory indexedObjectFactory;
-    protected Searcher searcher;
+    protected QueryProcessor queryProcessor;
 
     public Engine() {
         init();
     }
 
-    private void init() {
-    }
+    private void init() {}
 
     @Override
     public void setObjectStorage(EntityStorage storage) {
@@ -44,12 +42,12 @@ public class Engine<O extends IEntity> extends AbstractSearcher<O> {
         object.setId(res.getId());
         System.out.println("Saved object with ID "+res.getId());
         if (object instanceof IndexedObject) {
-            searcher.insert(object);
+            queryProcessor.insert((IndexedObject)object);
         } else {
             try {
                 List<IndexedObject> indexedObjects = indexedObjectFactory.processBean(object);
                 for (IndexedObject obj : indexedObjects) {
-                    searcher.insert(obj);
+                    queryProcessor.insert(obj);
                 }
             } catch (IndexingException e) {
                 e.printStackTrace();
@@ -70,12 +68,12 @@ public class Engine<O extends IEntity> extends AbstractSearcher<O> {
         System.out.println("Removed object from storage with ID " +object.getId());
 
         if (object instanceof IndexedObject) {
-            searcher.remove(object);
+            queryProcessor.remove((IndexedObject)object);
         } else {
             try {
                 List<IndexedObject> indexedObjects = indexedObjectFactory.processBean(object);
                 for (IndexedObject obj : indexedObjects) {
-                    searcher.remove(obj);
+                    queryProcessor.remove(obj);
                 }
             } catch (IndexingException e) {
                 e.printStackTrace();
@@ -97,7 +95,7 @@ public class Engine<O extends IEntity> extends AbstractSearcher<O> {
 
     @Override
     public ResultSet<O> search(Query query) {
-        return getResultObjects(searcher.search(query));
+        return getResultObjects(queryProcessor.search(query));
     }
 
     @Override
@@ -110,23 +108,14 @@ public class Engine<O extends IEntity> extends AbstractSearcher<O> {
         return new Result<O>((O) storage.get(entryresult.getResult().getId()));
     }
 
-    @Override
-    public Query.QueryType[] getSupportedQueryTypes() {
-        return searcher.getSupportedQueryTypes();
+    public QueryProcessor getQueryProcessor(){
+        return queryProcessor;
     }
 
-    @Override
-    public boolean supportsQueryType(Query.QueryType type) {
-        return searcher.supportsQueryType(type);
-    }
-
-    public Searcher getSearcher() {
-        return searcher;
-    }
-
-    public void setSearcher(Searcher searcher) {
-        this.searcher = searcher;
-        this.searcher.setObjectStorage(this.storage);
+    public void setQueryProcessor(QueryProcessor processor){
+        this.queryProcessor = processor;
+        this.queryProcessor.setObjectStorage(this.storage);
+        this.queryProcessor.setIndexedObjectFactory(indexedObjectFactory);
     }
 
     public IndexedObjectFactory getIndexedObjectFactory() {
@@ -135,5 +124,7 @@ public class Engine<O extends IEntity> extends AbstractSearcher<O> {
 
     public void setIndexedObjectFactory(IndexedObjectFactory indexedObjectFactory) {
         this.indexedObjectFactory = indexedObjectFactory;
+        if (this.queryProcessor != null)
+            setIndexedObjectFactory(indexedObjectFactory);
     }
 }

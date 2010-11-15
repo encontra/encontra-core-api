@@ -24,17 +24,4 @@ public interface Searcher<E> {
     public void setObjectStorage(EntityStorage storage);
 
     public EntityStorage getObjectStorage();
-
-    /**
-     * Obtains all the supported QueryTypes by the index
-     * @return a list of the supported query types
-     */
-    public Query.QueryType[] getSupportedQueryTypes();
-
-    /**
-     * Checks if a specific QueryType is supported by the index
-     * @param type the QueryType to be checked
-     * @return true if type is supported, otherwise, retrieved false
-     */
-    public boolean supportsQueryType(Query.QueryType type);
 }

@@ -3,16 +3,13 @@ package pt.inevo.encontra.index.search;
 import pt.inevo.encontra.index.IndexedObject;
 import pt.inevo.encontra.index.ResultSet;
 import pt.inevo.encontra.query.Query;
-import pt.inevo.encontra.query.Query.QueryType;
 import pt.inevo.encontra.query.QueryCombiner;
 import pt.inevo.encontra.storage.EntityStorage;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
 
 public class CombinedSearcher<E extends IndexedObject> implements Searcher<E> {
 
@@ -94,27 +91,5 @@ public class CombinedSearcher<E extends IndexedObject> implements Searcher<E> {
     @Override
     public EntityStorage getObjectStorage() {
         return storage;
-    }
-
-    @Override
-    public QueryType[] getSupportedQueryTypes() {
-        TreeSet<QueryType> types = new TreeSet<QueryType>();
-        for (Searcher sr : searcherMap.values()) {
-            types.addAll(Arrays.asList(sr.getSupportedQueryTypes()));
-        }
-        return types.toArray(new QueryType[1]);
-    }
-
-    @Override
-    public boolean supportsQueryType(Query.QueryType type) {
-        TreeSet<QueryType> types = new TreeSet<QueryType>();
-        for (Searcher sr : searcherMap.values()) {
-            types.addAll(Arrays.asList(sr.getSupportedQueryTypes()));
-        }
-
-        if (types.contains(type)) {
-            return true;
-        }
-        return false;
     }
 }
