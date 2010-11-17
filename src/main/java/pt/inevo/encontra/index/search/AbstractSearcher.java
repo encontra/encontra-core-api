@@ -1,6 +1,7 @@
 package pt.inevo.encontra.index.search;
 
 import pt.inevo.encontra.descriptors.Descriptor;
+import pt.inevo.encontra.engine.QueryProcessor;
 import pt.inevo.encontra.index.Index;
 import pt.inevo.encontra.index.Result;
 import pt.inevo.encontra.index.ResultSet;
@@ -17,6 +18,7 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
 
     protected Index<Descriptor> index;
     protected EntityStorage storage;
+    protected QueryProcessor queryProcessor;
 
     public void setIndex(Index index) {
         this.index = index;

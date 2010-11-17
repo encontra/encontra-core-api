@@ -49,6 +49,7 @@ public interface ExpressionVisitor {
         /**
          * Remembers the node being visited.
          */
+        @Override
         public void exit(Expression expr) {
             _visited.add(expr);
         }
@@ -56,6 +57,7 @@ public interface ExpressionVisitor {
         /**
          * Affirms if this node has been visited before.
          */
+        @Override
         public boolean isVisited(Expression expr) {
             return _visited.contains(expr);
         }
@@ -63,6 +65,7 @@ public interface ExpressionVisitor {
         /**
          * Returns PREFIX as the default traversal style.
          */
+        @Override
         public TraversalStyle getTraversalStyle(Expression expr) {
             return TraversalStyle.PREFIX;
         }

@@ -12,13 +12,12 @@ import pt.inevo.encontra.storage.IEntry;
 
 /**
  * Entry point of the framework.
- * An Engine is searcheable (we can search through different indexes).
+ * An Engine is searcheable.
  * @author ricardo
  */
 public class Engine<O extends IEntity> extends AbstractSearcher<O> {
 
     protected IndexedObjectFactory indexedObjectFactory;
-    protected QueryProcessor queryProcessor;
 
     public Engine() {
         init();
@@ -115,7 +114,6 @@ public class Engine<O extends IEntity> extends AbstractSearcher<O> {
     public void setQueryProcessor(QueryProcessor processor){
         this.queryProcessor = processor;
         this.queryProcessor.setObjectStorage(this.storage);
-        this.queryProcessor.setIndexedObjectFactory(indexedObjectFactory);
     }
 
     public IndexedObjectFactory getIndexedObjectFactory() {

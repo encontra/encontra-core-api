@@ -1,38 +1,41 @@
 package pt.inevo.encontra.engine;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
 import pt.inevo.encontra.index.IndexedObject;
-import pt.inevo.encontra.index.IndexedObjectFactory;
 import pt.inevo.encontra.index.ResultSet;
 import pt.inevo.encontra.index.search.CombinedSearcher;
+import pt.inevo.encontra.index.search.Searcher;
+import pt.inevo.encontra.query.CriteriaQuery;
 import pt.inevo.encontra.query.Query;
-import pt.inevo.encontra.query.criteria.ExpressionVisitor;
+import pt.inevo.encontra.query.QueryParser;
+import pt.inevo.encontra.query.QueryParserNode;
 
 /**
  * Interface for the query processor
  */
-public abstract class QueryProcessor<E extends IndexedObject> extends CombinedSearcher<E> implements ExpressionVisitor {
+public abstract class QueryProcessor<E extends IndexedObject> extends CombinedSearcher<E> {
 
-    protected IndexedObjectFactory indexedObjectFactory;
+    protected QueryParser queryParser;
 
     public QueryProcessor() {
         super();
     }
 
-    /**
-     * Perform a search in this engine.
-     * The query result will be the composition of the results from all the
-     * indexes, accordingly to the specified algorithm for combining results.
-     * @param query the interrogation
-     * @return a ResultSet with the results from the query
-     */
-    @Override
-    public abstract ResultSet<E> search(Query query);
-
-    public IndexedObjectFactory getIndexedObjectFactory() {
-        return indexedObjectFactory;
+    public QueryParser getQueryParser () {
+        return queryParser;
     }
 
-    public void setIndexedObjectFactory(IndexedObjectFactory indexedObjectFactory) {
-        this.indexedObjectFactory = indexedObjectFactory;
+    public abstract ResultSet process(Stack<QueryParserNode> node);
+
+    @Override
+    public ResultSet search(Query query) {
+        if (query instanceof CriteriaQuery) {
+            //QueryParser must be set
+            Stack<QueryParserNode> nodes = queryParser.parse(query);
+            return process(nodes);
+        }
+        return new ResultSet();
     }
 }
