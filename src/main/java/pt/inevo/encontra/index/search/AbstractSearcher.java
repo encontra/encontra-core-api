@@ -1,10 +1,12 @@
 package pt.inevo.encontra.index.search;
 
+import java.io.Serializable;
 import pt.inevo.encontra.descriptors.Descriptor;
 import pt.inevo.encontra.engine.QueryProcessor;
 import pt.inevo.encontra.index.Index;
 import pt.inevo.encontra.index.Result;
 import pt.inevo.encontra.index.ResultSet;
+import pt.inevo.encontra.query.Query;
 import pt.inevo.encontra.storage.EntityStorage;
 import pt.inevo.encontra.storage.IEntity;
 import pt.inevo.encontra.storage.IEntry;
@@ -36,6 +38,30 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
     @Override
     public EntityStorage getObjectStorage() {
         return storage;
+    }
+
+    public QueryProcessor getQueryProcessor() {
+        return queryProcessor;
+    }
+
+    public void setQueryProcessor(QueryProcessor processor) {
+        this.queryProcessor = processor;
+    }
+
+    /**
+     * Checks if an object exists in the Engine. If one of the registered
+     * indexes contains the object than it returns true. It only returns false,
+     * if all the indexes don't contain the object.
+     * @param object
+     * @return
+     */
+    public boolean contains(O object) {
+        return (storage.get((Serializable) object.getId()) != null);
+    }
+
+    @Override
+    public ResultSet search(Query query) {
+        return getResultObjects(queryProcessor.search(query));
     }
 
     /**

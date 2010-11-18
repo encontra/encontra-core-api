@@ -1,12 +1,9 @@
 package pt.inevo.encontra.engine;
 
-import java.io.Serializable;
 import java.util.List;
 
 import pt.inevo.encontra.index.*;
 import pt.inevo.encontra.index.search.AbstractSearcher;
-import pt.inevo.encontra.query.Query;
-import pt.inevo.encontra.storage.EntityStorage;
 import pt.inevo.encontra.storage.IEntity;
 import pt.inevo.encontra.storage.IEntry;
 
@@ -19,17 +16,8 @@ public class Engine<O extends IEntity> extends AbstractSearcher<O> {
 
     protected IndexedObjectFactory indexedObjectFactory;
 
-    public Engine() {
-        init();
-    }
-
-    private void init() {}
-
-    @Override
-    public void setObjectStorage(EntityStorage storage) {
-        this.storage = storage;
-    }
-
+    public Engine() {}
+    
     /**
      * Insert the into the Engine. This makes the object to be inserted into all
      * the indexes registered in the Engine.
@@ -49,7 +37,7 @@ public class Engine<O extends IEntity> extends AbstractSearcher<O> {
                     queryProcessor.insert(obj);
                 }
             } catch (IndexingException e) {
-                e.printStackTrace();
+                System.out.println("Exception: " + e.getMessage());
             }
         }
 
@@ -75,45 +63,15 @@ public class Engine<O extends IEntity> extends AbstractSearcher<O> {
                     queryProcessor.remove(obj);
                 }
             } catch (IndexingException e) {
-                e.printStackTrace();
+                System.out.println("Exception: " + e.getMessage());
             }
         }
         return true;
     }
 
-    /**
-     * Checks if an object exists in the Engine. If one of the registered
-     * indexes contains the object than it returns true. It only returns false,
-     * if all the indexes don't contain the object.
-     * @param object
-     * @return
-     */
-    public boolean contains(O object) {
-        return (storage.get((Serializable) object.getId()) != null);
-    }
-
-    @Override
-    public ResultSet<O> search(Query query) {
-        return getResultObjects(queryProcessor.search(query));
-    }
-
-    @Override
-    public EntityStorage getObjectStorage() {
-        return storage;
-    }
-
     @Override
     protected Result<O> getResultObject(Result<IEntry> entryresult) {
         return new Result<O>((O) storage.get(entryresult.getResult().getId()));
-    }
-
-    public QueryProcessor getQueryProcessor(){
-        return queryProcessor;
-    }
-
-    public void setQueryProcessor(QueryProcessor processor){
-        this.queryProcessor = processor;
-        this.queryProcessor.setObjectStorage(this.storage);
     }
 
     public IndexedObjectFactory getIndexedObjectFactory() {
@@ -122,7 +80,5 @@ public class Engine<O extends IEntity> extends AbstractSearcher<O> {
 
     public void setIndexedObjectFactory(IndexedObjectFactory indexedObjectFactory) {
         this.indexedObjectFactory = indexedObjectFactory;
-        if (this.queryProcessor != null)
-            setIndexedObjectFactory(indexedObjectFactory);
     }
 }
