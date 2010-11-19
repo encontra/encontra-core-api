@@ -9,7 +9,7 @@ import pt.inevo.encontra.index.ResultSet;
  * The combination algorithm is specified by the objects that implement this interface.
  * @author ricardo
  */
-public interface QueryCombiner{
+public interface QueryCombiner<IEntity>{
 
     /**
      * Combines the set of ResultSet's passed as the argument accordingly to
@@ -17,5 +17,5 @@ public interface QueryCombiner{
      * @param results a list of ResultSet's to be combined
      * @return a ResulSet with the combined Result's
      */
-    public ResultSet combine(List<ResultSet> results);
+    public ResultSet combine(List<ResultSet<IEntity>> results);
 }

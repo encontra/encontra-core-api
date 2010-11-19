@@ -59,6 +59,24 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
         return (storage.get((Serializable) object.getId()) != null);
     }
 
+
+    @Override
+    public boolean insert(O object) {
+        //saves the object in the storage - for the top domain searcher only
+        O res = (O) storage.save(object);
+        object.setId(res.getId());
+
+        return queryProcessor.insert(object);
+    }
+
+    @Override
+    public boolean remove(O object) {
+        //removes the object in the storage - for the top domain searcher only
+        storage.delete(object);
+
+        return queryProcessor.remove(object);
+    }
+
     @Override
     public ResultSet search(Query query) {
         return getResultObjects(queryProcessor.search(query));

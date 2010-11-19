@@ -1,6 +1,5 @@
 package pt.inevo.encontra.query;
 
-import java.util.Stack;
 import pt.inevo.encontra.query.criteria.ExpressionVisitor;
 
 /**
@@ -14,5 +13,5 @@ public interface QueryParser extends ExpressionVisitor {
      * @param query the query to be parsed
      * @return the structured that represents the parsed query
      */
-    public Stack<QueryParserNode> parse(Query query);
+    public QueryParserNode parse(Query query);
 }

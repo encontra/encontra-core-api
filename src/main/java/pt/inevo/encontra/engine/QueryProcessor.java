@@ -1,22 +1,36 @@
 package pt.inevo.encontra.engine;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 import pt.inevo.encontra.index.IndexedObject;
+import pt.inevo.encontra.index.IndexedObjectFactory;
+import pt.inevo.encontra.index.IndexingException;
 import pt.inevo.encontra.index.ResultSet;
 import pt.inevo.encontra.index.search.Searcher;
 import pt.inevo.encontra.query.CriteriaQuery;
 import pt.inevo.encontra.query.Query;
 import pt.inevo.encontra.query.QueryParser;
 import pt.inevo.encontra.query.QueryParserNode;
+import pt.inevo.encontra.storage.IEntity;
 
 /**
- * Interface for the query processor
+ * Generic interface for the query processor.
  */
-public abstract class QueryProcessor<E extends IndexedObject> {
+public abstract class QueryProcessor<E extends IEntity> {
 
+    /**
+     * Knows how to split the objects
+     */
+    protected IndexedObjectFactory indexedObjectFactory;
+    /**
+     * Parses the queries to an internal representation.
+     */
     protected QueryParser queryParser;
+    /**
+     * Keeps track of all the registered searchers.
+     * We can registered a searcher for a simple field or a complex one.
+     */
     protected Map<String, Searcher> searcherMap;
 
     public QueryProcessor() {
@@ -26,6 +40,14 @@ public abstract class QueryProcessor<E extends IndexedObject> {
 
     public QueryParser getQueryParser() {
         return queryParser;
+    }
+
+    public void setIndexedObjectFactory(IndexedObjectFactory factory) {
+        this.indexedObjectFactory = factory;
+    }
+
+    public IndexedObjectFactory getIndexedObjectFactory() {
+        return indexedObjectFactory;
     }
 
     public void setSearcher(String name, Searcher searcher) {
@@ -38,30 +60,83 @@ public abstract class QueryProcessor<E extends IndexedObject> {
         }
     }
 
-    public boolean insert(E entry) {
-        String name = entry.getName();
-        Searcher searcher = searcherMap.get(name);
+    public boolean insert(E object) {
+        if (object instanceof IndexedObject) {
+            insertObject(object);
+        } else {
+            try {
+                List<IndexedObject> indexedObjects = indexedObjectFactory.processBean(object);
+                for (IndexedObject obj : indexedObjects) {
+                    insertObject((E) obj);
+                }
+            } catch (IndexingException e) {
+                System.out.println("Exception: " + e.getMessage());
+            }
+        }
+
+        return true;
+    }
+
+    public boolean remove(E object) {
+        if (object instanceof IndexedObject) {
+            removeObject(object);
+        } else {
+            try {
+                List<IndexedObject> indexedObjects = indexedObjectFactory.processBean(object);
+                for (IndexedObject obj : indexedObjects) {
+                    removeObject((E) obj);
+                }
+            } catch (IndexingException e) {
+                System.out.println("Exception: " + e.getMessage());
+            }
+        }
+        return true;
+    }
+
+    protected boolean insertObject(E entry) {
+        Searcher searcher = getSearcher(entry);
         if (searcher == null) {
             return false;
         }
+
+        // TODO remove this workaround when correcting this
+        if (entry instanceof IndexedObject) {
+            IndexedObject o = (IndexedObject) entry;
+            Class s = o.getValue().getClass();
+            if (!s.isPrimitive() && !s.getName().contains("String")) {
+                searcher.insert(o.getValue());
+            }
+        }
+
         return searcher.insert(entry);
     }
 
-    public boolean remove(E entry) {
-        String name = entry.getName();
-        Searcher searcher = searcherMap.get(name);
+    protected boolean removeObject(E entry) {
+        Searcher searcher = getSearcher(entry);
         if (searcher == null) {
             return false;
         }
         return searcher.remove(entry);
     }
 
-    public abstract ResultSet process(Stack<QueryParserNode> node);
+    protected Searcher getSearcher(E entry) {
+        String name = "";
+        if (entry instanceof IndexedObject) {
+            IndexedObject o = (IndexedObject) entry;
+            name = o.getName();
+        } else {
+            name = entry.getClass().getName();
+        }
+        Searcher searcher = searcherMap.get(name);
+        return searcher;
+    }
+
+    public abstract ResultSet process(QueryParserNode node);
 
     public ResultSet search(Query query) {
         if (query instanceof CriteriaQuery) {
-            Stack<QueryParserNode> nodes = queryParser.parse(query);
-            return process(nodes);
+            QueryParserNode node = queryParser.parse(query);
+            return process(node);
         }
         return new ResultSet();
     }

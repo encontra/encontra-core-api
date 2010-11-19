@@ -53,6 +53,11 @@ public class Path<X> extends ExpressionImpl<X> {
         return _field.getName();
     }
 
+    public boolean isField(){
+        if (_field != null) return true;
+        else return false;
+    }
+
     /**
      *  Return the parent "node" in the path or null if no parent.
      */

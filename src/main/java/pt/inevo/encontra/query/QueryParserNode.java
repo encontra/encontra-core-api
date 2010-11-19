@@ -1,7 +1,7 @@
 package pt.inevo.encontra.query;
 
+import java.util.ArrayList;
 import java.util.List;
-import pt.inevo.encontra.index.IndexedObject;
 import pt.inevo.encontra.query.criteria.Expression;
 
 /**
@@ -10,9 +10,9 @@ import pt.inevo.encontra.query.criteria.Expression;
  */
 public class QueryParserNode {
     
-    public List<QueryParserNode> childrenNodes;
+    public List<QueryParserNode> childrenNodes = new ArrayList<QueryParserNode>();
     public Class predicateType;
     public Expression predicate;
     public String field;
-    public IndexedObject fieldObject;
+    public Object fieldObject;
 }
