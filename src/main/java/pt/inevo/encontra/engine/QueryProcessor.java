@@ -7,6 +7,7 @@ import pt.inevo.encontra.index.IndexedObject;
 import pt.inevo.encontra.index.IndexedObjectFactory;
 import pt.inevo.encontra.index.IndexingException;
 import pt.inevo.encontra.index.ResultSet;
+import pt.inevo.encontra.index.search.AbstractSearcher;
 import pt.inevo.encontra.index.search.Searcher;
 import pt.inevo.encontra.query.CriteriaQuery;
 import pt.inevo.encontra.query.Query;
@@ -32,6 +33,10 @@ public abstract class QueryProcessor<E extends IEntity> {
      * We can registered a searcher for a simple field or a complex one.
      */
     protected Map<String, Searcher> searcherMap;
+    /**
+     * Keep track of the searcher that holds this QueryProcessor
+     */
+    protected AbstractSearcher topSearcher;
 
     public QueryProcessor() {
         super();
@@ -40,6 +45,18 @@ public abstract class QueryProcessor<E extends IEntity> {
 
     public QueryParser getQueryParser() {
         return queryParser;
+    }
+
+    public void setQueryParser(QueryParser parser){
+        this.queryParser = parser;
+    }
+    
+    public AbstractSearcher getTopSearcher() {
+        return topSearcher;
+    }
+
+    public void setTopSearcher(AbstractSearcher topSearcher) {
+        this.topSearcher = topSearcher;
     }
 
     public void setIndexedObjectFactory(IndexedObjectFactory factory) {
@@ -116,6 +133,17 @@ public abstract class QueryProcessor<E extends IEntity> {
         if (searcher == null) {
             return false;
         }
+
+        // TODO remove this workaround when correcting this
+        if (entry instanceof IndexedObject) {
+            IndexedObject o = (IndexedObject) entry;
+            Class s = o.getValue().getClass();
+            if (!s.isPrimitive() && !s.getName().contains("String")) {
+                searcher.remove(o.getValue());
+            }
+        }
+
+
         return searcher.remove(entry);
     }
 

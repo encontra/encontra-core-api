@@ -46,6 +46,7 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
 
     public void setQueryProcessor(QueryProcessor processor) {
         this.queryProcessor = processor;
+        this.queryProcessor.setTopSearcher(this);
     }
 
     /**
