@@ -9,14 +9,14 @@ import java.util.*;
  */
 public class ResultSet<T> implements Collection<Result<T>> {
 
-    private SortedSet<Result<T>> results;
+    private List<Result<T>> results;
 
     public ResultSet() {
         this(new ArrayList<Result<T>>());
     }
 
     public ResultSet(List<Result<T>> results) {
-        this.results = Collections.synchronizedSortedSet(new TreeSet<Result<T>>());
+        this.results = Collections.synchronizedList(new ArrayList<Result<T>>());
         this.results.addAll(results);
     }
 
@@ -190,5 +190,9 @@ public class ResultSet<T> implements Collection<Result<T>> {
     @Override
     public void clear() {
         results.clear();
+    }
+
+    public void sort() {
+        Collections.sort(results);
     }
 }

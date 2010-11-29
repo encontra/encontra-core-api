@@ -15,4 +15,5 @@ public class QueryParserNode {
     public Expression predicate;
     public String field;
     public Object fieldObject;
+    public boolean distinct;
 }
