@@ -115,16 +115,6 @@ public abstract class QueryProcessor<E extends IEntity> {
         if (searcher == null) {
             return false;
         }
-
-        // TODO remove this workaround when correcting this
-        if (entry instanceof IndexedObject) {
-            IndexedObject o = (IndexedObject) entry;
-            Class s = o.getValue().getClass();
-            if (!s.isPrimitive() && !s.getName().contains("String")) {
-                searcher.insert(o.getValue());
-            }
-        }
-
         return searcher.insert(entry);
     }
 
@@ -133,17 +123,6 @@ public abstract class QueryProcessor<E extends IEntity> {
         if (searcher == null) {
             return false;
         }
-
-        // TODO remove this workaround when correcting this
-        if (entry instanceof IndexedObject) {
-            IndexedObject o = (IndexedObject) entry;
-            Class s = o.getValue().getClass();
-            if (!s.isPrimitive() && !s.getName().contains("String")) {
-                searcher.remove(o.getValue());
-            }
-        }
-
-
         return searcher.remove(entry);
     }
 
