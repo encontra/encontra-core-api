@@ -9,7 +9,7 @@ import pt.inevo.encontra.storage.IEntry;
  * interface, for insert, remove, list, and search through it;
  * @author ricardo
  */
-public interface Index<E extends IEntry> extends EntityStorage, EntryProvider<E> {
+public interface Index<E extends IEntry> extends EntityStorage/*, EntryProvider<E>*/ {
 
     /**
      * Inserts an object into the index
@@ -24,4 +24,11 @@ public interface Index<E extends IEntry> extends EntityStorage, EntryProvider<E>
      * @return the success of the operation
      */
     public boolean remove(E entry);
+
+    /**
+     * Gets an Entry Provider for the Index. We this provider we can iterate
+     * through all the index items. The provider doesn't modify the index.
+     * @return the provider for this index
+     */
+    public EntryProvider<E> getEntryProvider();
 }
