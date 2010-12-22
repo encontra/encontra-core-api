@@ -1,6 +1,5 @@
 package pt.inevo.encontra.engine;
 
-import akka.actor.UntypedActor;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
