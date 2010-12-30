@@ -11,6 +11,9 @@ import pt.inevo.encontra.query.criteria.Expression;
  */
 public interface Predicate extends Expression<Boolean> {
 
+    /**
+     * Indicates if the predicate is And or OR
+     */
     public static enum BooleanOperator {
         AND, OR
     }

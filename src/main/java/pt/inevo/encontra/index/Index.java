@@ -9,7 +9,7 @@ import pt.inevo.encontra.storage.IEntry;
  * interface, for insert, remove, list, and search through it;
  * @author ricardo
  */
-public interface Index<E extends IEntry> extends EntityStorage/*, EntryProvider<E>*/ {
+public interface Index<E extends IEntry> extends EntityStorage {
 
     /**
      * Inserts an object into the index

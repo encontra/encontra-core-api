@@ -138,8 +138,20 @@ public abstract class QueryProcessor<E extends IEntity> {
         return searcher;
     }
 
+    /**
+     * Takes an internal representation of the query and processes it.
+     * @param node the root node of the internal query representation
+     * @return the results of the query
+     */
     public abstract ResultSet process(QueryParserNode node);
 
+    /**
+     * Method that breaks down the supplied CriteriaQuery into its internal
+     * representation and sends it to the necessary searchers to retrieve the
+     * results.
+     * @param query must be an instance of a CriteriaQuery
+     * @return the results of the query
+     */
     public ResultSet search(Query query) {
         if (query instanceof CriteriaQuery) {
             QueryParserNode node = queryParser.parse(query);

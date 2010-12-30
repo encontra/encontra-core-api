@@ -10,10 +10,14 @@ import pt.inevo.encontra.query.criteria.Expression;
  */
 public class QueryParserNode {
     
-    public List<QueryParserNode> childrenNodes = new ArrayList<QueryParserNode>();
+    public List<QueryParserNode> childrenNodes;
     public Class predicateType;
     public Expression predicate;
     public String field;
     public Object fieldObject;
     public boolean distinct;
+
+    public QueryParserNode() {
+        childrenNodes = new ArrayList<QueryParserNode>();
+    }
 }
