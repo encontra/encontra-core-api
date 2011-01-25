@@ -19,6 +19,13 @@ public interface Searcher<E> {
     public ResultSet<E> search(Query query);
 
     /**
+     * Gets a Result Provider for the given query.
+     * @param query
+     * @return
+     */
+    public ResultsProvider<E> getResultsProvider(Query query);
+
+    /**
      * Inserts an object into the underlying storage mechanism.
      * @param entry the object to be inserted
      * @return true if operation successfully ends, false otherwise

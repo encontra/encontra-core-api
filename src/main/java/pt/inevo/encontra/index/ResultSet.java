@@ -133,6 +133,10 @@ public class ResultSet<T> implements Collection<Result<T>> {
         }
     }
 
+//    public int getPosition(Result<T> res){
+//        return results.
+//    }
+
     @Override
     public Iterator<Result<T>> iterator() {
         return results.iterator();
@@ -194,5 +198,12 @@ public class ResultSet<T> implements Collection<Result<T>> {
 
     public void sort() {
         Collections.sort(results);
+    }
+
+    public ResultSet<T> getCopy(){
+        List<Result> r = new ArrayList<Result>();
+        r.addAll(results);
+        Collections.copy(r, results);
+        return new ResultSet(r);
     }
 }

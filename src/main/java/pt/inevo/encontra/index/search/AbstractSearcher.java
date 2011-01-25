@@ -83,6 +83,12 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
         return getResultObjects(queryProcessor.search(query));
     }
 
+    @Override
+    public ResultsProvider<O> getResultsProvider(Query query){
+        //TO DO check this implementation here
+        return null;
+    }
+
     /**
      * Get a Result with an Object instead of the IndexedObject. Must be
      * implemented by all the concret searchers.
