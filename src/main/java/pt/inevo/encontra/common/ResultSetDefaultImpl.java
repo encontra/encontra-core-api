@@ -8,10 +8,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import pt.inevo.encontra.common.Result;
-import pt.inevo.encontra.common.ResultSet;
-import pt.inevo.encontra.common.ResultSetEvent;
-import pt.inevo.encontra.common.ResultSetListener;
 
 /**
  * The result set of a query.
@@ -216,6 +212,11 @@ public class ResultSetDefaultImpl<T> implements ResultSet<T> {
     @Override
     public int getSize() {
         return results.size();
+    }
+
+    @Override
+    public void setMaxSize(int newSize){
+        this.maxSize = newSize;
     }
 
     @Override

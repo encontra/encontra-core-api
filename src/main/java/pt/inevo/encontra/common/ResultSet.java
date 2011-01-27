@@ -34,6 +34,8 @@ public interface ResultSet<T> extends Iterable<Result<T>> {
 
     public int getSize();
 
+    public void setMaxSize(int newSize);
+
     public ResultSet<T> getCopy();
 
     public Result<T> getFirst();
