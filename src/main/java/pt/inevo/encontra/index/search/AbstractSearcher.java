@@ -4,8 +4,9 @@ import java.io.Serializable;
 import pt.inevo.encontra.descriptors.Descriptor;
 import pt.inevo.encontra.engine.QueryProcessor;
 import pt.inevo.encontra.index.Index;
-import pt.inevo.encontra.index.Result;
-import pt.inevo.encontra.index.ResultSet;
+import pt.inevo.encontra.common.Result;
+import pt.inevo.encontra.common.ResultSet;
+import pt.inevo.encontra.common.ResultSetDefaultImpl;
 import pt.inevo.encontra.query.Query;
 import pt.inevo.encontra.storage.EntityStorage;
 import pt.inevo.encontra.storage.IEntity;
@@ -104,11 +105,11 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
      * @return
      */
     protected ResultSet<O> getResultObjects(ResultSet<IEntry> indexEntryResultSet) {
-        ResultSet<O> results = new ResultSet<O>();
+        ResultSet<O> results = new ResultSetDefaultImpl<O>();
 
         for (Result entryResult : indexEntryResultSet) {
             Result r = getResultObject(entryResult);
-            r.setSimilarity(entryResult.getSimilarity());
+            r.setScore(entryResult.getScore());
             results.add(r);
         }
         return results;

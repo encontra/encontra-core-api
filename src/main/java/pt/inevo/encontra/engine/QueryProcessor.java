@@ -3,10 +3,10 @@ package pt.inevo.encontra.engine;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import pt.inevo.encontra.common.ResultSet;
 import pt.inevo.encontra.index.IndexedObject;
 import pt.inevo.encontra.index.IndexedObjectFactory;
 import pt.inevo.encontra.index.IndexingException;
-import pt.inevo.encontra.index.ResultSet;
 import pt.inevo.encontra.index.search.AbstractSearcher;
 import pt.inevo.encontra.index.search.Searcher;
 import pt.inevo.encontra.query.CriteriaQuery;
@@ -157,6 +157,6 @@ public abstract class QueryProcessor<E extends IEntity> {
             QueryParserNode node = queryParser.parse(query);
             return process(node);
         }
-        return new ResultSet();
+        throw new RuntimeException("Query must be a CriteriaQuery");
     }
 }

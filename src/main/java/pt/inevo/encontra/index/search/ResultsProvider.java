@@ -1,7 +1,7 @@
 package pt.inevo.encontra.index.search;
 
 import java.util.List;
-import pt.inevo.encontra.index.Result;
+import pt.inevo.encontra.common.Result;
 
 /**
  * Iterates over the results of a query
