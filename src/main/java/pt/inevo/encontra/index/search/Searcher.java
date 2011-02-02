@@ -1,5 +1,6 @@
 package pt.inevo.encontra.index.search;
 
+import pt.inevo.encontra.common.ResultProvider;
 import pt.inevo.encontra.common.ResultSet;
 import pt.inevo.encontra.query.Query;
 import pt.inevo.encontra.storage.EntityStorage;
@@ -23,9 +24,11 @@ public interface Searcher<E> {
      * @param query
      * @return
      */
-    public ResultsProvider<E> getResultsProvider(Query query);
+//    public ResultsProvider<E> getResultsProvider(Query query);
 
-//    public ResultsProvider<E> getResultProvider();
+    public ResultProvider getResultProvider();
+
+    public void setResultProvider(ResultProvider provider);
 
     /**
      * Inserts an object into the underlying storage mechanism.

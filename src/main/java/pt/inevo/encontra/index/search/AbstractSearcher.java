@@ -5,6 +5,7 @@ import pt.inevo.encontra.descriptors.Descriptor;
 import pt.inevo.encontra.engine.QueryProcessor;
 import pt.inevo.encontra.index.Index;
 import pt.inevo.encontra.common.Result;
+import pt.inevo.encontra.common.ResultProvider;
 import pt.inevo.encontra.common.ResultSet;
 import pt.inevo.encontra.common.ResultSetDefaultImpl;
 import pt.inevo.encontra.query.Query;
@@ -22,6 +23,7 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
     protected Index<Descriptor> index;
     protected EntityStorage storage;
     protected QueryProcessor queryProcessor;
+    protected ResultProvider resultProvider;
 
     public void setIndex(Index index) {
         this.index = index;
@@ -84,10 +86,20 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
         return getResultObjects(queryProcessor.search(query));
     }
 
+//    @Override
+//    public ResultsProvider<O> getResultsProvider(Query query){
+//        //TO DO check this implementation here
+//        return null;
+//    }
+
     @Override
-    public ResultsProvider<O> getResultsProvider(Query query){
-        //TO DO check this implementation here
-        return null;
+    public void setResultProvider(ResultProvider provider){
+        this.resultProvider = provider;
+    }
+
+    @Override
+    public ResultProvider getResultProvider() {
+        return this.resultProvider;
     }
 
     /**

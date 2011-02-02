@@ -14,6 +14,8 @@ public interface CriteriaQuery<T> extends Query {
 
     public CriteriaQuery<T> distinct(boolean distinct);
 
+    public CriteriaQuery<T> limit(int value);
+
     public CriteriaQuery<T> orderBy(Order... orders);
 
     public Class<T> getResultType();
@@ -22,5 +24,9 @@ public interface CriteriaQuery<T> extends Query {
 
     public Predicate getRestrictions();
 
-    public <X> Path<X> from(Class<X> cls);
+    public boolean isDistinct();
+
+    public int getLimit();
+
+    public <X> Path<X> from(Class<X>  cls);
 }

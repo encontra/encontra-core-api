@@ -38,9 +38,13 @@ public interface ResultSet<T> extends Iterable<Result<T>> {
 
     public ResultSet<T> getCopy();
 
+    public Result<T> getSeed();
+
     public Result<T> getFirst();
 
     public Result<T> getLast();
+
+    public ResultSet<T> getFirstResults(int value);
 
     public boolean registerListener(ResultSetListener listener);
 }

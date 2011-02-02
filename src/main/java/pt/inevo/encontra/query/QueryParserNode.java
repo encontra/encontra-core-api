@@ -16,6 +16,7 @@ public class QueryParserNode {
     public String field;
     public Object fieldObject;
     public boolean distinct;
+    public int limit;
 
     public QueryParserNode() {
         childrenNodes = new ArrayList<QueryParserNode>();
