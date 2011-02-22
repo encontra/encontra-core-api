@@ -4,7 +4,7 @@ package pt.inevo.encontra.common;
  *
  * @author Ricardo
  */
-public class ResultSetEvent {
+public class ResultSetEvent<T> {
 
     /**
      * @return the event
@@ -23,15 +23,23 @@ public class ResultSetEvent {
     /**
      * @return the result
      */
-    public Result getResult() {
+    public Result<T> getResult() {
         return result;
     }
 
     /**
      * @param result the result to set
      */
-    public void setResult(Result result) {
+    public void setResult(Result<T> result) {
         this.result = result;
+    }
+
+    public Object getSender() {
+        return sender;
+    }
+
+    public void setSender(Object sender) {
+        this.sender = sender;
     }
 
     public enum Event {
@@ -39,12 +47,14 @@ public class ResultSetEvent {
     }
 
     private Event event;
-    private Result result;
+    private Result<T> result;
+    private Object sender;
 
     public ResultSetEvent(){}
 
-    public ResultSetEvent(Event event, Result result){
+    public ResultSetEvent(Event event, Result<T> result, Object sender){
         this.event = event;
         this.result = result;
+        this.sender = sender;
     }
 }

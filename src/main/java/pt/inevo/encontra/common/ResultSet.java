@@ -46,5 +46,9 @@ public interface ResultSet<T> extends Iterable<Result<T>> {
 
     public ResultSet<T> getFirstResults(int value);
 
-    public boolean registerListener(ResultSetListener listener);
+    public void setOwner(Object o);
+
+    public Object getOwner();
+
+    public boolean registerListener(ResultSetListener<T> listener);
 }

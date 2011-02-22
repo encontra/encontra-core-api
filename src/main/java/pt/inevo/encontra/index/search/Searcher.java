@@ -20,14 +20,15 @@ public interface Searcher<E> {
     public ResultSet<E> search(Query query);
 
     /**
-     * Gets a Result Provider for the given query.
-     * @param query
+     * Gets the ResultProvider being used by this searcher.
      * @return
      */
-//    public ResultsProvider<E> getResultsProvider(Query query);
-
     public ResultProvider getResultProvider();
 
+    /**
+     * Set the ResultProvider to be used by this searcher.
+     * @param provider
+     */
     public void setResultProvider(ResultProvider provider);
 
     /**
@@ -55,4 +56,11 @@ public interface Searcher<E> {
      * @return
      */
     public EntityStorage getObjectStorage();
+
+    /**
+     * Gets the cost of performing a search in this searcher.
+     * Each Searcher should have it's own cost function.
+     * @return
+     */
+    public int getCost();
 }

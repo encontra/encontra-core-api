@@ -86,12 +86,6 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
         return getResultObjects(queryProcessor.search(query));
     }
 
-//    @Override
-//    public ResultsProvider<O> getResultsProvider(Query query){
-//        //TO DO check this implementation here
-//        return null;
-//    }
-
     @Override
     public void setResultProvider(ResultProvider provider){
         this.resultProvider = provider;
@@ -103,9 +97,18 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
     }
 
     /**
+     * Gets the cost of performing a search using this searcher.
+     * The default cost is the number of elements in the underlying index.
+     * @return
+     */
+    @Override
+    public int getCost(){
+        return index.getEntryProvider().size();
+    }
+
+    /**
      * Get a Result with an Object instead of the IndexedObject. Must be
      * implemented by all the concret searchers.
-     * @param idx
      * @param indexEntryresult
      * @return
      */

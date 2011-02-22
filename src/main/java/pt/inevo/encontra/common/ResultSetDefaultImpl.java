@@ -24,6 +24,7 @@ public class ResultSetDefaultImpl<T> implements ResultSet<T> {
     private Result<T> seedResult, worseResult;
     private double lowestScore;
     private int maxSize;
+    private Object owner;
 
     public ResultSetDefaultImpl() {
         this(new ArrayList<Result<T>>());
@@ -41,6 +42,14 @@ public class ResultSetDefaultImpl<T> implements ResultSet<T> {
 
         listeners = new ArrayList<ResultSetListener>();
         results = Collections.synchronizedSortedSet(new TreeSet<Result<T>>(new ResultComparator(seed)));
+    }
+
+    public Object getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Object owner) {
+        this.owner = owner;
     }
 
     class ResultComparator implements Comparator<Result<T>> {
@@ -88,7 +97,7 @@ public class ResultSetDefaultImpl<T> implements ResultSet<T> {
 
         if (maxSize == 0) {
             for (ResultSetListener lst : listeners) {
-                lst.handleEvent(new ResultSetEvent(ResultSetEvent.Event.ADDED, tResult));
+                lst.handleEvent(new ResultSetEvent(ResultSetEvent.Event.ADDED, tResult, owner));
             }
             return results.add(tResult);
         } else {
@@ -104,7 +113,7 @@ public class ResultSetDefaultImpl<T> implements ResultSet<T> {
                     lowestScore = seedResult.getScore() - worseResult.getScore();
                 }
                 for (ResultSetListener lst : listeners) {
-                    lst.handleEvent(new ResultSetEvent(ResultSetEvent.Event.ADDED, tResult));
+                    lst.handleEvent(new ResultSetEvent(ResultSetEvent.Event.ADDED, tResult, owner));
                 }
                 return true;
             } else {
@@ -129,7 +138,7 @@ public class ResultSetDefaultImpl<T> implements ResultSet<T> {
                     }
                     
                     for (ResultSetListener lst : listeners) {
-                        lst.handleEvent(new ResultSetEvent(ResultSetEvent.Event.ADDED, tResult));
+                        lst.handleEvent(new ResultSetEvent(ResultSetEvent.Event.ADDED, tResult, owner));
                     }
                     return true;
                 }
@@ -151,7 +160,7 @@ public class ResultSetDefaultImpl<T> implements ResultSet<T> {
 
         if (maxSize == 0) {
             for (ResultSetListener lst : listeners) {
-                lst.handleEvent(new ResultSetEvent(ResultSetEvent.Event.REMOVED, r));
+                lst.handleEvent(new ResultSetEvent(ResultSetEvent.Event.REMOVED, r, owner));
             }
             return results.remove(r);
         } else {
@@ -293,7 +302,7 @@ public class ResultSetDefaultImpl<T> implements ResultSet<T> {
     public void clear() {
         results.clear();
         for (ResultSetListener lst : listeners) {
-            lst.handleEvent(new ResultSetEvent(ResultSetEvent.Event.CLEARED, null));
+            lst.handleEvent(new ResultSetEvent(ResultSetEvent.Event.CLEARED, null, owner));
         }
     }
 
