@@ -2,6 +2,7 @@ package pt.inevo.encontra.index.search;
 
 import java.io.Serializable;
 import pt.inevo.encontra.descriptors.Descriptor;
+import pt.inevo.encontra.descriptors.DescriptorExtractor;
 import pt.inevo.encontra.engine.QueryProcessor;
 import pt.inevo.encontra.index.Index;
 import pt.inevo.encontra.common.Result;
@@ -24,6 +25,7 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
     protected EntityStorage storage;
     protected QueryProcessor queryProcessor;
     protected ResultProvider resultProvider;
+    protected DescriptorExtractor extractor;
 
     public void setIndex(Index index) {
         this.index = index;
@@ -50,6 +52,14 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
     public void setQueryProcessor(QueryProcessor processor) {
         this.queryProcessor = processor;
         this.queryProcessor.setTopSearcher(this);
+    }
+
+       public void setDescriptorExtractor(DescriptorExtractor extractor) {
+        this.extractor = extractor;
+    }
+
+    public DescriptorExtractor getDescriptorExtractor() {
+        return extractor;
     }
 
     /**

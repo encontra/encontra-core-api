@@ -1,6 +1,5 @@
 package pt.inevo.encontra.descriptors;
 
-
 import pt.inevo.encontra.storage.Entry;
 import pt.inevo.encontra.storage.IEntry;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -8,6 +7,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class CompositeDescriptor implements Descriptor {
@@ -15,11 +15,12 @@ public class CompositeDescriptor implements Descriptor {
     private Serializable id;
     private String name;
 
-    private double[] weights;
+    //    private double[] weights;
+    protected List<Double> weights = new ArrayList<Double>();
     protected List<Descriptor> descriptors=new ArrayList<Descriptor>();
 
     public CompositeDescriptor(){
-        this(new Descriptor[] {});
+//        this(new Descriptor[] {});
     }
 
     public CompositeDescriptor(Descriptor[] descriptors) {
@@ -28,8 +29,10 @@ public class CompositeDescriptor implements Descriptor {
 
     public void setDescriptors(Descriptor[] descriptors) {
         this.descriptors = Arrays.asList(descriptors);
-        this.weights=new double[descriptors.length];
-        Arrays.fill(weights,1.0);
+        this.weights=new ArrayList<Double>(descriptors.length);
+        for (int i = 0; i < descriptors.length; i++) {
+            weights.add(1.0);
+        }
     }
 
     @Override
@@ -40,7 +43,7 @@ public class CompositeDescriptor implements Descriptor {
 
         for(Descriptor descriptor : descriptors) {
             Descriptor otherDescriptor = other.findDescriptor(descriptor.getName());
-            distance += descriptor.getDistance(otherDescriptor) * weights[descriptorCount];
+            distance += descriptor.getDistance(otherDescriptor) * weights.get(descriptorCount);
             descriptorCount++;
         }
 
@@ -68,7 +71,7 @@ public class CompositeDescriptor implements Descriptor {
 
     @Override
     public void setId(Serializable id) {
-       this.id=id;
+        this.id=id;
     }
 
     public List<Descriptor> getDescriptors() {
@@ -95,19 +98,36 @@ public class CompositeDescriptor implements Descriptor {
             if(descriptor.getName().equals(name))
                 return descriptor;
         }
+        try {
+            Descriptor desc = (Descriptor)Class.forName(name).newInstance();
+            descriptors.add(desc);
+            weights.add(1.0);
+            return desc;
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         return null;
     }
-    
+
     @Override
     public void setValue(Object val) {
-       if(val instanceof IEntry[]){
+        if(val instanceof IEntry[]){
             IEntry[] objects=(IEntry[]) val;
             for(IEntry obj : objects) {
                 Descriptor descriptor=findDescriptor(obj.getId().toString());
                 descriptor.setValue(obj.getValue());
             }
+        }else if (val instanceof IEntry) {
+            IEntry obj = (IEntry)val;
+            Descriptor descriptor = findDescriptor(obj.getId().toString());
+            descriptor.setValue(obj.getValue());
         } else {
-           throw new NotImplementedException();
+            System.out.println("Object type was: " + val.getClass().toString());
+            throw new NotImplementedException();
         }
         return;
     }
