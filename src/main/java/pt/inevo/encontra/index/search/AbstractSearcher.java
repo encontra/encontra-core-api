@@ -14,6 +14,9 @@ import pt.inevo.encontra.storage.EntityStorage;
 import pt.inevo.encontra.storage.IEntity;
 import pt.inevo.encontra.storage.IEntry;
 
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+
 /**
  * AbstractSearcher with common functions implemented.
  * @author Ricardo
@@ -93,7 +96,12 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
 
     @Override
     public ResultSet search(Query query) {
-        return getResultObjects(queryProcessor.search(query));
+        return getResultObjects(queryProcessor.search(query), null);
+    }
+
+    @Override
+    public ResultSet search(Query query, String criteria) {
+        return getResultObjects(queryProcessor.search(query), criteria);
     }
 
     @Override
@@ -122,20 +130,22 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
      * @param indexEntryresult
      * @return
      */
-    protected abstract Result<O> getResultObject(Result<IEntry> indexEntryresult);
+    protected abstract Result<O> getResultObject(Result<IEntry> indexEntryresult, String criteria);
 
     /**
      * Gets all the Results with an IEntity instead of the IEntry object.
      * @param indexEntryResultSet
      * @return
      */
-    protected ResultSet<O> getResultObjects(ResultSet<IEntry> indexEntryResultSet) {
+    protected ResultSet<O> getResultObjects(ResultSet<IEntry> indexEntryResultSet, String criteria) {
         ResultSet<O> results = new ResultSetDefaultImpl<O>();
 
         for (Result entryResult : indexEntryResultSet) {
-            Result r = getResultObject(entryResult);
-            r.setScore(entryResult.getScore());
-            results.add(r);
+            Result r = getResultObject(entryResult, criteria);
+            if (r != null){
+                r.setScore(entryResult.getScore());
+                results.add(r);
+            }
         }
         return results;
     }

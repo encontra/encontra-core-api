@@ -5,6 +5,9 @@ import pt.inevo.encontra.common.ResultSet;
 import pt.inevo.encontra.query.Query;
 import pt.inevo.encontra.storage.EntityStorage;
 
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+
 /**
  * Generic interface for the searcher.
  * @author Ricardo
@@ -18,6 +21,8 @@ public interface Searcher<E> {
      * @return a ResultSet with the results from the query
      */
     public ResultSet<E> search(Query query);
+
+    public ResultSet<E> search(Query query, String storageCriteria);
 
     /**
      * Gets the ResultProvider being used by this searcher.

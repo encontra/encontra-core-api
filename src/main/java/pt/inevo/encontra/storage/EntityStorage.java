@@ -1,6 +1,8 @@
 package pt.inevo.encontra.storage;
 
 import java.io.Serializable;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 
 /**
  * Entry storage interface
@@ -18,6 +20,8 @@ public interface EntityStorage<I extends Serializable,O extends IEntity<I>> {
      * @return object
      */
     public O get(I id);
+
+    public O get(I id, String criteria);
 
      /**
      * Save all changes made to an object.
