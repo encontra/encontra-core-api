@@ -1,6 +1,7 @@
 package pt.inevo.encontra.query;
 
 import pt.inevo.encontra.query.criteria.Expression;
+import pt.inevo.encontra.query.criteria.StorageCriteria;
 
 /**
  * Criteria Query - Query for combining Criteria
@@ -27,6 +28,10 @@ public interface CriteriaQuery<T> extends Query {
     public boolean isDistinct();
 
     public int getLimit();
+
+    public StorageCriteria getCriteria();
+
+    public CriteriaQuery setCriteria(StorageCriteria criteria);
 
     public <X> Path<X> from(Class<X>  cls);
 }

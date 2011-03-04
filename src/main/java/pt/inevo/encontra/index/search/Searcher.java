@@ -22,8 +22,6 @@ public interface Searcher<E> {
      */
     public ResultSet<E> search(Query query);
 
-    public ResultSet<E> search(Query query, String storageCriteria);
-
     /**
      * Gets the ResultProvider being used by this searcher.
      * @return

@@ -3,6 +3,7 @@ package pt.inevo.encontra.query;
 import java.util.ArrayList;
 import java.util.List;
 import pt.inevo.encontra.query.criteria.Expression;
+import pt.inevo.encontra.query.criteria.StorageCriteria;
 
 /**
  * The generic internal structure for the parsed query.
@@ -17,6 +18,7 @@ public class QueryParserNode {
     public Object fieldObject;
     public boolean distinct;
     public int limit;
+    public StorageCriteria criteria;
 
     public QueryParserNode() {
         childrenNodes = new ArrayList<QueryParserNode>();

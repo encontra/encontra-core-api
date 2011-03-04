@@ -96,12 +96,7 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
 
     @Override
     public ResultSet search(Query query) {
-        return getResultObjects(queryProcessor.search(query), null);
-    }
-
-    @Override
-    public ResultSet search(Query query, String criteria) {
-        return getResultObjects(queryProcessor.search(query), criteria);
+        return getResultObjects(queryProcessor.search(query));
     }
 
     @Override
@@ -130,18 +125,18 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
      * @param indexEntryresult
      * @return
      */
-    protected abstract Result<O> getResultObject(Result<IEntry> indexEntryresult, String criteria);
+    protected abstract Result<O> getResultObject(Result<IEntry> indexEntryresult);
 
     /**
      * Gets all the Results with an IEntity instead of the IEntry object.
      * @param indexEntryResultSet
      * @return
      */
-    protected ResultSet<O> getResultObjects(ResultSet<IEntry> indexEntryResultSet, String criteria) {
+    protected ResultSet<O> getResultObjects(ResultSet<IEntry> indexEntryResultSet) {
         ResultSet<O> results = new ResultSetDefaultImpl<O>();
 
         for (Result entryResult : indexEntryResultSet) {
-            Result r = getResultObject(entryResult, criteria);
+            Result r = getResultObject(entryResult);
             if (r != null){
                 r.setScore(entryResult.getScore());
                 results.add(r);
