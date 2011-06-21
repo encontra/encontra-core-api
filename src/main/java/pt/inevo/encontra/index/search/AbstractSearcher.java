@@ -6,7 +6,7 @@ import pt.inevo.encontra.common.ResultSet;
 import pt.inevo.encontra.common.ResultSetDefaultImpl;
 import pt.inevo.encontra.descriptors.Descriptor;
 import pt.inevo.encontra.descriptors.DescriptorExtractor;
-import pt.inevo.encontra.engine.QueryProcessor;
+import pt.inevo.encontra.engine.IQueryProcessor;
 import pt.inevo.encontra.index.Index;
 import pt.inevo.encontra.query.Query;
 import pt.inevo.encontra.storage.EntityStorage;
@@ -25,7 +25,7 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
 
     protected Index<Descriptor> index;
     protected EntityStorage storage;
-    protected QueryProcessor queryProcessor;
+    protected IQueryProcessor queryProcessor;
     protected ResultProvider resultProvider;
     protected DescriptorExtractor extractor;
 
@@ -59,18 +59,18 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
     }
 
     /**
-     * Gets the QueryProcessor for the Searcher.
-     * @return the QueryProcessor entity
+     * Gets the IQueryProcessor for the Searcher.
+     * @return the IQueryProcessor entity
      */
-    public QueryProcessor getQueryProcessor() {
+    public IQueryProcessor getQueryProcessor() {
         return queryProcessor;
     }
 
     /**
-     * Sets the QueryProcessor for the Searcher.
-     * @param processor the QueryProcessor entity
+     * Sets the IQueryProcessor for the Searcher.
+     * @param processor the IQueryProcessor entity
      */
-    public void setQueryProcessor(QueryProcessor processor) {
+    public void setQueryProcessor(IQueryProcessor processor) {
         this.queryProcessor = processor;
         this.queryProcessor.setTopSearcher(this);
     }

@@ -20,7 +20,12 @@ import java.util.Map;
  * Interface for the query processor.
  * @param <E> the type of objects the processor must know how to handle
  */
-public abstract class QueryProcessor<E extends IEntity> {
+public abstract class IQueryProcessor<E extends IEntity> {
+
+    /**
+     * The result type class.
+     */
+    protected Class resultClass;
 
     /**
      * Knows how to split the objects
@@ -36,11 +41,11 @@ public abstract class QueryProcessor<E extends IEntity> {
      */
     protected Map<String, Searcher> searcherMap;
     /**
-     * Keep track of the searcher that holds this QueryProcessor
+     * Keep track of the searcher that holds this IQueryProcessor
      */
     protected AbstractSearcher topSearcher;
 
-    public QueryProcessor() {
+    public IQueryProcessor() {
         super();
         searcherMap = new HashMap<String, Searcher>();
     }
@@ -52,7 +57,7 @@ public abstract class QueryProcessor<E extends IEntity> {
     public void setQueryParser(QueryParser parser){
         this.queryParser = parser;
     }
-    
+
     public AbstractSearcher getTopSearcher() {
         return topSearcher;
     }
@@ -146,6 +151,27 @@ public abstract class QueryProcessor<E extends IEntity> {
      * @return the results of the query
      */
     public abstract ResultSet process(QueryParserNode node);
+
+    /**
+     * Processes an AND node.
+     * @param node
+     * @return
+     */
+    protected abstract ResultSet processAND(QueryParserNode node);
+
+    /**
+     * Processes an OR node.
+     * @param node
+     * @return
+     */
+    protected abstract ResultSet processOR(QueryParserNode node);
+
+    /**
+     * Processes the SIMILAR, EQUAL, NOTEQUAL nodes.
+     * @param node
+     * @return
+     */
+    protected abstract ResultSet processSIMILAR(QueryParserNode node);
 
     /**
      * Method that breaks down the supplied CriteriaQuery into its internal
