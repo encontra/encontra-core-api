@@ -46,7 +46,6 @@ public class CompositeDescriptorExtractor<O extends IEntity> extends DescriptorE
         CompositeDescriptor descriptor = newDescriptor();
         descriptor.setDescriptors(descriptors);
         descriptor.setId(object.getId());
-        //descriptor.setValue(doc);
 
         return descriptor;
     }

@@ -1,26 +1,25 @@
 package pt.inevo.encontra.index.search;
 
-import java.io.Serializable;
-import pt.inevo.encontra.descriptors.Descriptor;
-import pt.inevo.encontra.descriptors.DescriptorExtractor;
-import pt.inevo.encontra.engine.QueryProcessor;
-import pt.inevo.encontra.index.Index;
 import pt.inevo.encontra.common.Result;
 import pt.inevo.encontra.common.ResultProvider;
 import pt.inevo.encontra.common.ResultSet;
 import pt.inevo.encontra.common.ResultSetDefaultImpl;
+import pt.inevo.encontra.descriptors.Descriptor;
+import pt.inevo.encontra.descriptors.DescriptorExtractor;
+import pt.inevo.encontra.engine.QueryProcessor;
+import pt.inevo.encontra.index.Index;
 import pt.inevo.encontra.query.Query;
 import pt.inevo.encontra.storage.EntityStorage;
 import pt.inevo.encontra.storage.IEntity;
 import pt.inevo.encontra.storage.IEntry;
 
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
+import java.io.Serializable;
 
 /**
  * AbstractSearcher with common functions implemented.
+ *
+ * @param <O> the type of entities to be returned by the AbstractSearcher
  * @author Ricardo
- * @param <O>
  */
 public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O> {
 
@@ -30,10 +29,21 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
     protected ResultProvider resultProvider;
     protected DescriptorExtractor extractor;
 
+    /**
+     * Sets the Index over which the Searcher will perform the queries.
+     *
+     * @param index
+     */
     public void setIndex(Index index) {
         this.index = index;
     }
 
+    /**
+     * Gets the Index over which the Searcher performs the queries.
+     *
+     * @param index
+     * @return
+     */
     public Index getIndex(Index index) {
         return index;
     }
@@ -48,19 +58,35 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
         return storage;
     }
 
+    /**
+     * Gets the QueryProcessor for the Searcher.
+     * @return the QueryProcessor entity
+     */
     public QueryProcessor getQueryProcessor() {
         return queryProcessor;
     }
 
+    /**
+     * Sets the QueryProcessor for the Searcher.
+     * @param processor the QueryProcessor entity
+     */
     public void setQueryProcessor(QueryProcessor processor) {
         this.queryProcessor = processor;
         this.queryProcessor.setTopSearcher(this);
     }
 
-       public void setDescriptorExtractor(DescriptorExtractor extractor) {
+    /**
+     * Sets the DescriptorExtractor used by the Searcher.
+     * @param extractor the descriptor extractor to be used by the Searcher
+     */
+    public void setDescriptorExtractor(DescriptorExtractor extractor) {
         this.extractor = extractor;
     }
 
+    /**
+     * Gets the DescriptorExtractor used by the Searcher.
+     * @return the descriptor extractor used by the Searcher
+     */
     public DescriptorExtractor getDescriptorExtractor() {
         return extractor;
     }
@@ -69,6 +95,7 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
      * Checks if an object exists in the Engine. If one of the registered
      * indexes contains the object than it returns true. It only returns false,
      * if all the indexes don't contain the object.
+     *
      * @param object
      * @return
      */
@@ -100,7 +127,7 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
     }
 
     @Override
-    public void setResultProvider(ResultProvider provider){
+    public void setResultProvider(ResultProvider provider) {
         this.resultProvider = provider;
     }
 
@@ -112,16 +139,18 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
     /**
      * Gets the cost of performing a search using this searcher.
      * The default cost is the number of elements in the underlying index.
+     *
      * @return
      */
     @Override
-    public int getCost(){
+    public int getCost() {
         return index.getEntryProvider().size();
     }
 
     /**
      * Get a Result with an Object instead of the IndexedObject. Must be
      * implemented by all the concret searchers.
+     *
      * @param indexEntryresult
      * @return
      */
@@ -129,6 +158,7 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
 
     /**
      * Gets all the Results with an IEntity instead of the IEntry object.
+     *
      * @param indexEntryResultSet
      * @return
      */
@@ -137,7 +167,7 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
 
         for (Result entryResult : indexEntryResultSet) {
             Result r = getResultObject(entryResult);
-            if (r != null){
+            if (r != null) {
                 r.setScore(entryResult.getScore());
                 results.add(r);
             }

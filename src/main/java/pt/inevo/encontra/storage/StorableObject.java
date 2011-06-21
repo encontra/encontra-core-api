@@ -5,9 +5,9 @@ import pt.inevo.encontra.index.IndexedObject;
 import java.io.Serializable;
 
 /**
- * Simple storable object
+ * Interface for a simple storable object.
  * @param <ID> The Type of the Id
- * @param <O>  The 
+ * @param <O>  The object type
  * @param <V>  A Serializable Value used for storing
  */
 public abstract class StorableObject<ID extends Serializable,O,V extends Serializable> extends IndexedObject<ID,O>  {
@@ -19,7 +19,6 @@ public abstract class StorableObject<ID extends Serializable,O,V extends Seriali
     public StorableObject(ID identifier,O image){
         super(identifier, image);
     }
-    
 
     public abstract V getStorableValue();
 

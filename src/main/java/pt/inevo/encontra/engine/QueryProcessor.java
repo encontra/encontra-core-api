@@ -1,8 +1,5 @@
 package pt.inevo.encontra.engine;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import pt.inevo.encontra.common.ResultSet;
 import pt.inevo.encontra.index.IndexedObject;
 import pt.inevo.encontra.index.IndexedObjectFactory;
@@ -15,8 +12,13 @@ import pt.inevo.encontra.query.QueryParser;
 import pt.inevo.encontra.query.QueryParserNode;
 import pt.inevo.encontra.storage.IEntity;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
- * Generic interface for the query processor.
+ * Interface for the query processor.
+ * @param <E> the type of objects the processor must know how to handle
  */
 public abstract class QueryProcessor<E extends IEntity> {
 

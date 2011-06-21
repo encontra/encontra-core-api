@@ -6,11 +6,20 @@ import java.io.Serializable;
 /**
  * Meta-Object of the framework.
  * Represent an element that can be indexed in the framework.
- * @author ricardo
+ * This is the lower level of an object that can be indexed by the framework.
+ * @param <ID>
+ * @param <O>
  */
 public class IndexedObject<ID extends Serializable, O> extends Entry<ID, O> {
 
+    /**
+     * The name of the indexed object.
+     */
     protected String name;
+
+    /**
+     * The boost value of the indexed object.
+     */
     protected double boost;
 
     public IndexedObject(ID id, String name, O obj, double boost) {
@@ -42,6 +51,11 @@ public class IndexedObject<ID extends Serializable, O> extends Entry<ID, O> {
         this.boost = boost;
     }
 
+    /**
+     * An IndexedObject is equal to another when they have the same id.
+     * @param obj
+     * @return
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof IndexedObject) {

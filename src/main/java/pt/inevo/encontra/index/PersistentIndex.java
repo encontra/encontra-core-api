@@ -7,5 +7,4 @@ import pt.inevo.encontra.storage.IEntry;
  * @author ricardo
  */
 public interface PersistentIndex<E extends IEntry> extends Index<E>, Storable{
-    
 }

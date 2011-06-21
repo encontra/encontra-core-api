@@ -12,9 +12,9 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
+ * Default implementation of a ResultSet.
  * The result set of a query.
  * Contains a list of Result's that can be iterated.
- *
  * @author Ricardo
  */
 public class ResultSetDefaultImpl<T> implements ResultSet<T> {
