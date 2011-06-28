@@ -188,7 +188,7 @@ public abstract class IQueryProcessor<E extends IEntity> {
      * @param node
      * @return
      */
-    protected abstract ResultSet processSIMILAR(QueryParserNode node);
+    protected abstract ResultSet processSIMILAR(QueryParserNode node, boolean top);
 
     /**
      * Method that breaks down the supplied CriteriaQuery into its internal
