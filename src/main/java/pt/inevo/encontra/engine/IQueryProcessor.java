@@ -15,9 +15,12 @@ import pt.inevo.encontra.storage.IEntity;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Interface for the query processor.
+ *
  * @param <E> the type of objects the processor must know how to handle
  */
 public abstract class IQueryProcessor<E extends IEntity> {
@@ -45,8 +48,15 @@ public abstract class IQueryProcessor<E extends IEntity> {
      */
     protected AbstractSearcher topSearcher;
 
-    public IQueryProcessor() {
-        super();
+    /**
+     * Logger for the Query Processors
+     */
+    protected Logger logger;
+
+    public IQueryProcessor(){}
+
+    public IQueryProcessor(Class clazz) {
+        resultClass = clazz;
         searcherMap = new HashMap<String, Searcher>();
     }
 
@@ -54,7 +64,7 @@ public abstract class IQueryProcessor<E extends IEntity> {
         return queryParser;
     }
 
-    public void setQueryParser(QueryParser parser){
+    public void setQueryParser(QueryParser parser) {
         this.queryParser = parser;
     }
 
@@ -94,7 +104,9 @@ public abstract class IQueryProcessor<E extends IEntity> {
                     insertObject((E) obj);
                 }
             } catch (IndexingException e) {
-                System.out.println("Exception: " + e.getMessage());
+                //log the exception and return false, because there was an error indexing the object.
+                logger.log(Level.SEVERE, "Could not insert the object. Possible reason " + e.getMessage());
+                return false;
             }
         }
 
@@ -111,7 +123,8 @@ public abstract class IQueryProcessor<E extends IEntity> {
                     removeObject((E) obj);
                 }
             } catch (IndexingException e) {
-                System.out.println("Exception: " + e.getMessage());
+                logger.log(Level.SEVERE, "Could not remove the object. Possible reason: " + e.getMessage());
+                return false;
             }
         }
         return true;
@@ -147,6 +160,7 @@ public abstract class IQueryProcessor<E extends IEntity> {
 
     /**
      * Takes an internal representation of the query and processes it.
+     *
      * @param node the root node of the internal query representation
      * @return the results of the query
      */
@@ -154,6 +168,7 @@ public abstract class IQueryProcessor<E extends IEntity> {
 
     /**
      * Processes an AND node.
+     *
      * @param node
      * @return
      */
@@ -161,6 +176,7 @@ public abstract class IQueryProcessor<E extends IEntity> {
 
     /**
      * Processes an OR node.
+     *
      * @param node
      * @return
      */
@@ -168,6 +184,7 @@ public abstract class IQueryProcessor<E extends IEntity> {
 
     /**
      * Processes the SIMILAR, EQUAL, NOTEQUAL nodes.
+     *
      * @param node
      * @return
      */
@@ -184,7 +201,11 @@ public abstract class IQueryProcessor<E extends IEntity> {
         if (query instanceof CriteriaQuery) {
             QueryParserNode node = queryParser.parse(query);
             return process(node);
+        } else {
+            String message = "Query must be a CriteriaQuery";
+            logger.log(Level.SEVERE, message);
+
+            throw new RuntimeException(message);
         }
-        throw new RuntimeException("Query must be a CriteriaQuery");
     }
 }
