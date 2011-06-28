@@ -112,7 +112,7 @@ public abstract class QueryProcessor<E extends IEntity> {
 
     protected boolean insertObject(E entry) {
         Searcher searcher = getSearcher(entry);
-        if (searcher == null) {
+         if (searcher == null) {
             return false;
         }
         return searcher.insert(entry);
@@ -124,6 +124,10 @@ public abstract class QueryProcessor<E extends IEntity> {
             return false;
         }
         return searcher.remove(entry);
+    }
+
+    public Searcher getSearcher(String name) {
+        return searcherMap.get(name);
     }
 
     protected Searcher getSearcher(E entry) {

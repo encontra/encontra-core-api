@@ -1,5 +1,10 @@
 package pt.inevo.encontra.index;
 
+import pt.inevo.encontra.common.distance.DistanceMeasure;
+import pt.inevo.encontra.common.distance.HasDistance;
+import pt.inevo.encontra.descriptors.Descriptor;
+
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -9,7 +14,8 @@ import java.util.NoSuchElementException;
  * A Vector for numeric types.
  * @param <T>
  */
-public class Vector<T extends Number> implements Cloneable, Iterable<T>{
+public class Vector<T extends Number> implements Serializable,Cloneable, Iterable<T>{
+
 
     protected int size;
     protected T[] values;
@@ -26,6 +32,20 @@ public class Vector<T extends Number> implements Cloneable, Iterable<T>{
         this.values = values;
         this.size = values.length;
         this.typeT = type;
+    }
+
+    public void setValues(T[] values) {
+        this.values = values;
+        this.size=values.length;
+    }
+
+    public T[] getValues() {
+        return values;
+    }
+
+    public void resize(int size){
+      this.size = size;
+      this.values = (T[])Array.newInstance(typeT,size);
     }
 
     public int size() {

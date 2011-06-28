@@ -17,6 +17,9 @@ public class Result<T> implements Comparable {
         return object;
     }
 
+    public void setResultObject( T object) {
+        this.object = object;
+    }
     public double getScore() {
         return score;
     }

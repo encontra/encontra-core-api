@@ -37,7 +37,7 @@ public abstract class DescriptorExtractor<O extends IEntity, D extends Descripto
         this.descriptorClass = descriptorClass;
     }
 
-    protected D newDescriptor() {
+    public D newDescriptor() {
         try {
             return  getDescriptorClass().newInstance();
         } catch (InstantiationException e) {
