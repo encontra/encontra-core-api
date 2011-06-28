@@ -19,26 +19,16 @@ public class Entry<ID extends Serializable,V> implements IEntry<ID,V>{
         this.object = object;
     }
 
-    /**
-     * Gets the object of this object.
-     * @return the object
-     */
     @Override
     public V getValue() {
         return object;
     }
 
-    /**
-     * @param object the object to set
-     */
     @Override
     public void setValue(V object) {
         this.object = object;
     }
 
-    /**
-     * @return the id
-     */
     @Override
     public ID getId() {
         return id;

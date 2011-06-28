@@ -7,7 +7,6 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class CompositeDescriptor implements Descriptor {
@@ -15,13 +14,10 @@ public class CompositeDescriptor implements Descriptor {
     private Serializable id;
     private String name;
 
-    //    private double[] weights;
     protected List<Double> weights = new ArrayList<Double>();
     protected List<Descriptor> descriptors=new ArrayList<Descriptor>();
 
-    public CompositeDescriptor(){
-//        this(new Descriptor[] {});
-    }
+    public CompositeDescriptor(){}
 
     public CompositeDescriptor(Descriptor[] descriptors) {
         setDescriptors(descriptors);

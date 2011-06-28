@@ -1,8 +1,5 @@
 package pt.inevo.encontra.engine;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import pt.inevo.encontra.common.ResultSet;
 import pt.inevo.encontra.index.IndexedObject;
 import pt.inevo.encontra.index.IndexedObjectFactory;
@@ -15,10 +12,23 @@ import pt.inevo.encontra.query.QueryParser;
 import pt.inevo.encontra.query.QueryParserNode;
 import pt.inevo.encontra.storage.IEntity;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
- * Generic interface for the query processor.
+ * Interface for the query processor.
+ *
+ * @param <E> the type of objects the processor must know how to handle
  */
-public abstract class QueryProcessor<E extends IEntity> {
+public abstract class IQueryProcessor<E extends IEntity> {
+
+    /**
+     * The result type class.
+     */
+    protected Class resultClass;
 
     /**
      * Knows how to split the objects
@@ -34,12 +44,19 @@ public abstract class QueryProcessor<E extends IEntity> {
      */
     protected Map<String, Searcher> searcherMap;
     /**
-     * Keep track of the searcher that holds this QueryProcessor
+     * Keep track of the searcher that holds this IQueryProcessor
      */
     protected AbstractSearcher topSearcher;
 
-    public QueryProcessor() {
-        super();
+    /**
+     * Logger for the Query Processors
+     */
+    protected Logger logger;
+
+    public IQueryProcessor(){}
+
+    public IQueryProcessor(Class clazz) {
+        resultClass = clazz;
         searcherMap = new HashMap<String, Searcher>();
     }
 
@@ -47,10 +64,10 @@ public abstract class QueryProcessor<E extends IEntity> {
         return queryParser;
     }
 
-    public void setQueryParser(QueryParser parser){
+    public void setQueryParser(QueryParser parser) {
         this.queryParser = parser;
     }
-    
+
     public AbstractSearcher getTopSearcher() {
         return topSearcher;
     }
@@ -87,7 +104,9 @@ public abstract class QueryProcessor<E extends IEntity> {
                     insertObject((E) obj);
                 }
             } catch (IndexingException e) {
-                System.out.println("Exception: " + e.getMessage());
+                //log the exception and return false, because there was an error indexing the object.
+                logger.log(Level.SEVERE, "Could not insert the object. Possible reason " + e.getMessage());
+                return false;
             }
         }
 
@@ -104,7 +123,8 @@ public abstract class QueryProcessor<E extends IEntity> {
                     removeObject((E) obj);
                 }
             } catch (IndexingException e) {
-                System.out.println("Exception: " + e.getMessage());
+                logger.log(Level.SEVERE, "Could not remove the object. Possible reason: " + e.getMessage());
+                return false;
             }
         }
         return true;
@@ -144,10 +164,35 @@ public abstract class QueryProcessor<E extends IEntity> {
 
     /**
      * Takes an internal representation of the query and processes it.
+     *
      * @param node the root node of the internal query representation
      * @return the results of the query
      */
     public abstract ResultSet process(QueryParserNode node);
+
+    /**
+     * Processes an AND node.
+     *
+     * @param node
+     * @return
+     */
+    protected abstract ResultSet processAND(QueryParserNode node);
+
+    /**
+     * Processes an OR node.
+     *
+     * @param node
+     * @return
+     */
+    protected abstract ResultSet processOR(QueryParserNode node);
+
+    /**
+     * Processes the SIMILAR, EQUAL, NOTEQUAL nodes.
+     *
+     * @param node
+     * @return
+     */
+    protected abstract ResultSet processSIMILAR(QueryParserNode node, boolean top);
 
     /**
      * Method that breaks down the supplied CriteriaQuery into its internal
@@ -160,7 +205,11 @@ public abstract class QueryProcessor<E extends IEntity> {
         if (query instanceof CriteriaQuery) {
             QueryParserNode node = queryParser.parse(query);
             return process(node);
+        } else {
+            String message = "Query must be a CriteriaQuery";
+            logger.log(Level.SEVERE, message);
+
+            throw new RuntimeException(message);
         }
-        throw new RuntimeException("Query must be a CriteriaQuery");
     }
 }

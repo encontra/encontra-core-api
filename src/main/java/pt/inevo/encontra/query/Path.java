@@ -5,9 +5,7 @@ import java.lang.reflect.Field;
 /**
  * Represents a simple or compound attribute path from a
  * bound type or collection, and is a "primitive" expression.
- *
  * @param <X>  the type of this path
- *
  * based on openjpa-persistence/src/main/java/org/apache/openjpa/persistence/criteria/PathImpl.java
  */
 public class Path<X> extends ExpressionImpl<X> {
@@ -49,10 +47,19 @@ public class Path<X> extends ExpressionImpl<X> {
         return new Path<Y>(this, field, fieldClass);
     }
 
+    /**
+     * Gets the field name.
+     * Can only be used when the Path represents a class field.
+     * @return the name of the field represented by the path
+     */
     public String getAttributeName() {
         return _field.getName();
     }
 
+    /**
+     * Checks if the path represents a class field.
+     * @return true if the path represents a field or false otherwise
+     */
     public boolean isField(){
         if (_field != null) return true;
         else return false;

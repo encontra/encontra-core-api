@@ -5,6 +5,9 @@ import pt.inevo.encontra.storage.IEntity;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * Factory interface for creating indexed objects.
+ */
 public interface IndexedObjectFactory {
 
     class IndexedField{
@@ -19,6 +22,13 @@ public interface IndexedObjectFactory {
             this.boost=boost;
         }
     }
-    public List<IndexedObject> processBean(IEntity bean) throws IndexingException;
 
+    /**
+     * Given an instance of IEntity, decomposes the entity into several indexed objects, accordingly to the
+     * indexed fields.
+     * @param bean the entity to be decomposed
+     * @return a list of indexed objects
+     * @throws IndexingException if an error occurs when decomposing the bean
+     */
+    public List<IndexedObject> processBean(IEntity bean) throws IndexingException;
 }

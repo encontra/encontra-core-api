@@ -4,6 +4,7 @@ import pt.inevo.encontra.storage.IEntry;
 
 /**
  * Encontra IndexEntry Builder.
+ * Generic factory for creating index entries, and retrieving the indexed objects.
  */
 public abstract class IndexEntryFactory<O extends IEntry,E extends IndexEntry> {
 

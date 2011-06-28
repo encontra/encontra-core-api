@@ -5,13 +5,10 @@ import pt.inevo.encontra.common.ResultSet;
 import pt.inevo.encontra.query.Query;
 import pt.inevo.encontra.storage.EntityStorage;
 
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-
 /**
  * Generic interface for the searcher.
  * @author Ricardo
- * @param <E>
+ * @param <E> the type of elements the Searcher will return
  */
 public interface Searcher<E> {
 

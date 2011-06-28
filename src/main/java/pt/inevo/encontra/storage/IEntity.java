@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * Interface marks class which can be persisted.
- * The Id is unique.
+ * The Id must be unique.
  *
  * @param <I> type of primary key, it must be serializable
  */
