@@ -1,9 +1,5 @@
 package pt.inevo.encontra.index;
 
-import pt.inevo.encontra.common.distance.DistanceMeasure;
-import pt.inevo.encontra.common.distance.HasDistance;
-import pt.inevo.encontra.descriptors.Descriptor;
-
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.Arrays;
@@ -15,7 +11,6 @@ import java.util.NoSuchElementException;
  * @param <T>
  */
 public class Vector<T extends Number> implements Serializable,Cloneable, Iterable<T>{
-
 
     protected int size;
     protected T[] values;
