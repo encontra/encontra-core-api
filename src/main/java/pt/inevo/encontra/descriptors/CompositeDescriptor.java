@@ -52,6 +52,22 @@ public class CompositeDescriptor implements Descriptor {
     }
 
     @Override
+    public double getNorm() {
+        double norm = 0f;
+        int descriptorCount = 0;
+
+        for(Descriptor descriptor : descriptors) {
+            norm += descriptor.getNorm() * weights.get(descriptorCount);
+            descriptorCount++;
+        }
+
+        if (descriptorCount > 0) {
+            norm = norm / (float) descriptorCount;
+        }
+        return norm;
+    }
+
+    @Override
     public String getName() {
         return name;
     }

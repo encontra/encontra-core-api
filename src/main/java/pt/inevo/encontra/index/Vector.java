@@ -166,9 +166,28 @@ public class Vector<T extends Number> implements Serializable,Cloneable, Iterabl
     }
 
     public double getDistanceSquared(Vector v) {
-        assert(size == v.size());
+//        assert(size == v.size());
+//        return getLengthSquared() + v.getLengthSquared() - 2 * this.dot(v);
 
-        return getLengthSquared() + v.getLengthSquared() - 2 * this.dot(v);
+        double val = 0, tmp = 0;
+        Vector v1 = this, v2 = v;
+        if (v1.size() < v2.size()) {
+            v1 = v;
+            v2 = this;
+        }
+
+        int i;
+        for (i = 0; i < v2.size(); i++) {
+            tmp = v1.get(i).doubleValue() - v2.get(i).doubleValue();
+            tmp *= tmp;
+            val += tmp;
+        }
+
+        for (; i < v1.size(); i++) {
+            tmp = v1.get(i).doubleValue() * v1.get(i).doubleValue();
+            val += tmp;
+        }
+        return val;
     }
     
     /**

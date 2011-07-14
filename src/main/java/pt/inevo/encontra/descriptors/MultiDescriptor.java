@@ -54,6 +54,22 @@ public class MultiDescriptor<D extends Descriptor> extends ArrayList<D> implemen
     }
 
     @Override
+    public double getNorm() {
+        double norm = 0f;
+        int descriptorCount = 0;
+
+        for(Descriptor descriptor : this) {
+            norm += descriptor.getNorm();
+            descriptorCount++;
+        }
+
+        if (descriptorCount > 0) {
+            norm = norm / (float) descriptorCount;
+        }
+        return norm;
+    }
+
+    @Override
     public String getName() {
         return name;
     }
