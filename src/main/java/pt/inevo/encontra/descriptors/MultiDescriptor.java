@@ -14,7 +14,6 @@ public class MultiDescriptor<D extends Descriptor> extends ArrayList<D> implemen
     private Serializable id;
     private String name;
 
-
     public void setDescriptors(D[] descriptors) {
         this.clear();
         this.addAll(Arrays.asList(descriptors));
