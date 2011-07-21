@@ -2,46 +2,37 @@ package pt.inevo.encontra.common;
 
 import pt.inevo.encontra.common.distance.HasDistance;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
- * Default implementation of a ResultSet.
- * The result set of a query.
- * Contains a list of Result's that can be iterated.
+ * A result set that keeps the results ordered by their insertion ordered
  * @author Ricardo
  */
-public class ResultSetDefaultImpl<T> implements ResultSet<T> {
+public class SimpleResultSetImpl<T> implements ResultSet<T> {
 
     private List<ResultSetListener> listeners;
-    private SortedSet<Result<T>> results;
+    private List<Result<T>> results;
     private Result<T> seedResult, worseResult;
     private double lowestScore;
     private int maxSize;
     private Object owner;
 
-    public ResultSetDefaultImpl() {
+    public SimpleResultSetImpl() {
         this(new ArrayList<Result<T>>());
     }
 
-    public ResultSetDefaultImpl(List<Result<T>> results) {
-        this.results = Collections.synchronizedSortedSet(new TreeSet<Result<T>>(new ResultComparator(null)));
+    public SimpleResultSetImpl(List<Result<T>> results) {
+        this.results = new ArrayList<Result<T>>();
         this.results.addAll(results);
         listeners = new ArrayList<ResultSetListener>();
     }
 
-    public ResultSetDefaultImpl(Result<T> seed, int size) {
+    public SimpleResultSetImpl(Result<T> seed, int size) {
         this.seedResult = seed;
         this.maxSize = size;
 
         listeners = new ArrayList<ResultSetListener>();
-        results = Collections.synchronizedSortedSet(new TreeSet<Result<T>>(new ResultComparator(seed)));
+        this.results = new ArrayList<Result<T>>();
     }
 
     public Object getOwner() {
@@ -50,46 +41,6 @@ public class ResultSetDefaultImpl<T> implements ResultSet<T> {
 
     public void setOwner(Object owner) {
         this.owner = owner;
-    }
-
-    class ResultComparator implements Comparator<Result<T>> {
-
-        private Result<T> seed;
-
-        ResultComparator (Result<T> seed) {
-            this.seed = seed;
-        }
-
-        @Override
-        public int compare(Result<T> o1, Result<T> o2) {
-            try {
-                //checks the order
-                double dist1 = 0, dist2 = 0;
-                if (seed != null) {
-                    if (o1.getResultObject() instanceof HasDistance && o2.getResultObject() instanceof HasDistance){
-                        dist1 = ((HasDistance) seed.getResultObject()).getDistance(o1.getResultObject());
-                        dist2 = ((HasDistance) seed.getResultObject()).getDistance(o2.getResultObject());
-                    } else {
-                        dist1 = seed.getScore() - o1.getScore();
-                        dist2 = seed.getScore() - o2.getScore();
-                    }
-
-                    if (dist1 == dist2) {   //have the same distance but they don't have the same object
-                        return -1;
-                    }
-                    else return new Double(dist1).compareTo(new Double(dist2));
-                } else {
-                    if (o1.getScore() == o2.getScore()) {
-                        return -1;
-                    }
-                    else return new Double(o2.getScore()).compareTo(new Double(o1.getScore()));
-                }
-
-            } catch (Exception ex) {
-                System.out.println("[Error]: Possible reason " + ex.toString());
-                return 0;
-            }
-        }
     }
 
     @Override
@@ -105,7 +56,7 @@ public class ResultSetDefaultImpl<T> implements ResultSet<T> {
                 if (!results.add(tResult)) {
                     System.out.println("That should not have happened.");
                 }
-                worseResult = results.last();
+                worseResult = results.get(results.size()-1);
 
                 if (seedResult.getResultObject() instanceof HasDistance) {
                     lowestScore = ((HasDistance)seedResult.getResultObject()).getDistance(worseResult.getResultObject());
@@ -129,7 +80,7 @@ public class ResultSetDefaultImpl<T> implements ResultSet<T> {
                 } else {
                     boolean removed = remove(worseResult);
                     results.add(tResult);
-                    worseResult = results.last();
+                    worseResult = results.get(results.size() - 1);
                     
                     if (seedResult.getResultObject() instanceof HasDistance) {
                         lowestScore = ((HasDistance)seedResult.getResultObject()).getDistance(worseResult.getResultObject());
@@ -168,7 +119,7 @@ public class ResultSetDefaultImpl<T> implements ResultSet<T> {
             if (results.contains(r)) {
                 boolean value = results.remove(r);
                 if (results.size() > 0) {
-                    worseResult = results.last();
+                    worseResult = results.get(results.size() - 1);
                     try {
 
                         if (seedResult.getResultObject() instanceof HasDistance){
@@ -280,12 +231,12 @@ public class ResultSetDefaultImpl<T> implements ResultSet<T> {
 
     @Override
     public Result<T> getFirst() {
-        return results.first();
+        return results.get(0);
     }
 
     @Override
     public Result<T> getLast() {
-        return results.last();
+        return results.get(results.size() - 1);
     }
 
     @Override
@@ -307,10 +258,10 @@ public class ResultSetDefaultImpl<T> implements ResultSet<T> {
     }
 
     @Override
-    public ResultSetDefaultImpl<T> getCopy() {
+    public SimpleResultSetImpl<T> getCopy() {
         List<Result> r = new ArrayList<Result>();
         r.addAll(results);
-        return new ResultSetDefaultImpl(r);
+        return new SimpleResultSetImpl(r);
     }
 
     @Override
@@ -322,7 +273,7 @@ public class ResultSetDefaultImpl<T> implements ResultSet<T> {
             r.add(it.next());
             howMany++;
         }
-        return new ResultSetDefaultImpl(r);
+        return new SimpleResultSetImpl(r);
     }
 
     @Override

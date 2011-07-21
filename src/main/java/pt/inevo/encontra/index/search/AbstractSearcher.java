@@ -1,9 +1,6 @@
 package pt.inevo.encontra.index.search;
 
-import pt.inevo.encontra.common.Result;
-import pt.inevo.encontra.common.ResultProvider;
-import pt.inevo.encontra.common.ResultSet;
-import pt.inevo.encontra.common.ResultSetDefaultImpl;
+import pt.inevo.encontra.common.*;
 import pt.inevo.encontra.descriptors.Descriptor;
 import pt.inevo.encontra.descriptors.DescriptorExtractor;
 import pt.inevo.encontra.engine.IQueryProcessor;
