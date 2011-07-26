@@ -96,7 +96,7 @@ public abstract class IQueryProcessor<E extends IEntity> {
 
     public boolean insert(E object) {
         if (object instanceof IndexedObject) {
-            insertObject(object);
+            return insertObject(object);
         } else {
             try {
                 List<IndexedObject> indexedObjects = indexedObjectFactory.processBean(object);

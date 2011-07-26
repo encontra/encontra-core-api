@@ -30,9 +30,9 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
     protected ResultProvider resultProvider;
     protected DescriptorExtractor extractor;
 
-    protected Benchmark benchmark=new Benchmark("Searcher");
+    protected Benchmark benchmark = new Benchmark("Searcher");
 
-    public Benchmark getBenchmark(){
+    public Benchmark getBenchmark() {
         return benchmark;
     }
 
@@ -62,6 +62,7 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
 
     /**
      * Gets the IQueryProcessor for the Searcher.
+     *
      * @return the IQueryProcessor entity
      */
     public IQueryProcessor getQueryProcessor() {
@@ -70,6 +71,7 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
 
     /**
      * Sets the IQueryProcessor for the Searcher.
+     *
      * @param processor the IQueryProcessor entity
      */
     public void setQueryProcessor(IQueryProcessor processor) {
@@ -79,6 +81,7 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
 
     /**
      * Sets the DescriptorExtractor used by the Searcher.
+     *
      * @param extractor the descriptor extractor to be used by the Searcher
      */
     public void setDescriptorExtractor(DescriptorExtractor extractor) {
@@ -87,6 +90,7 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
 
     /**
      * Gets the DescriptorExtractor used by the Searcher.
+     *
      * @return the descriptor extractor used by the Searcher
      */
     public DescriptorExtractor getDescriptorExtractor() {
@@ -105,11 +109,10 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
         return (storage.get((Serializable) object.getId()) != null);
     }
 
-
     @Override
     public boolean insert(O object) {
         //saves the object in the storage - for the top domain searcher only
-        if(storage!=null) {
+        if (storage != null) {
             O res = (O) storage.save(object);
             object.setId(res.getId());
         }
@@ -119,18 +122,20 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
     @Override
     public boolean remove(O object) {
         //removes the object in the storage - for the top domain searcher only
-        storage.delete(object);
+        if (storage != null) {
+            storage.delete(object);
+        }
 
         return queryProcessor.remove(object);
     }
 
     @Override
     public ResultSet search(Query query) {
-        BenchmarkEntry searchBenchmark=benchmark.start("Search");
+        BenchmarkEntry searchBenchmark = benchmark.start("Search");
         ResultSet res = queryProcessor.search(query);
         searchBenchmark.stop();
 
-        BenchmarkEntry storageBenchmark=benchmark.start("Storage retrieval");
+        BenchmarkEntry storageBenchmark = benchmark.start("Storage retrieval");
         res = getResultObjects(res);
         storageBenchmark.stop();
 
@@ -178,11 +183,11 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
 
         for (Result entryResult : indexEntryResultSet) {
             // TODO - relax type contraints in extractor - Ugly hack - Handle multidescriptor extractor
-            if(getDescriptorExtractor() instanceof MultiDescriptorExtractor){
-                MultiDescriptorExtractor extractor=(MultiDescriptorExtractor) getDescriptorExtractor();
+            if (getDescriptorExtractor() instanceof MultiDescriptorExtractor) {
+                MultiDescriptorExtractor extractor = (MultiDescriptorExtractor) getDescriptorExtractor();
                 Descriptor descriptor = (Descriptor) entryResult.getResultObject();
-                Descriptor [] descriptors ={};
-                MultiDescriptor multiDescriptor=  extractor.newDescriptor();
+                Descriptor[] descriptors = {};
+                MultiDescriptor multiDescriptor = extractor.newDescriptor();
                 multiDescriptor.setId(descriptor.getId());
                 multiDescriptor.setDescriptors(descriptors);
                 entryResult.setResultObject(multiDescriptor);
