@@ -1,19 +1,16 @@
 package pt.inevo.encontra.engine;
 
 import pt.inevo.encontra.common.ResultSet;
-import pt.inevo.encontra.index.IndexedObject;
-import pt.inevo.encontra.index.IndexedObjectFactory;
-import pt.inevo.encontra.index.IndexingException;
+import pt.inevo.encontra.common.ResultSetDefaultImpl;
 import pt.inevo.encontra.index.search.AbstractSearcher;
-import pt.inevo.encontra.index.search.Searcher;
 import pt.inevo.encontra.query.CriteriaQuery;
 import pt.inevo.encontra.query.Query;
 import pt.inevo.encontra.query.QueryParser;
 import pt.inevo.encontra.query.QueryParserNode;
+import pt.inevo.encontra.query.criteria.Expression;
 import pt.inevo.encontra.storage.IEntity;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,33 +28,32 @@ public abstract class IQueryProcessor<E extends IEntity> {
     protected Class resultClass;
 
     /**
-     * Knows how to split the objects
-     */
-    protected IndexedObjectFactory indexedObjectFactory;
-    /**
      * Parses the queries to an internal representation.
      */
     protected QueryParser queryParser;
-    /**
-     * Keeps track of all the registered searchers.
-     * We can registered a searcher for a simple field or a complex one.
-     */
-    protected Map<String, Searcher> searcherMap;
+
     /**
      * Keep track of the searcher that holds this IQueryProcessor
      */
     protected AbstractSearcher topSearcher;
 
     /**
+     * Map with the different processors for the available operators
+     */
+    private Map<Class<? extends Expression>, QueryOperatorProcessor> operatorsProcessors;
+
+    /**
      * Logger for the Query Processors
      */
     protected Logger logger;
 
-    public IQueryProcessor(){}
+    public IQueryProcessor(){
+        this(null);
+    }
 
     public IQueryProcessor(Class clazz) {
         resultClass = clazz;
-        searcherMap = new HashMap<String, Searcher>();
+        operatorsProcessors = new HashMap<Class<? extends Expression>, QueryOperatorProcessor>();
     }
 
     public QueryParser getQueryParser() {
@@ -76,90 +72,12 @@ public abstract class IQueryProcessor<E extends IEntity> {
         this.topSearcher = topSearcher;
     }
 
-    public void setIndexedObjectFactory(IndexedObjectFactory factory) {
-        this.indexedObjectFactory = factory;
+    public Map<Class<? extends Expression>, QueryOperatorProcessor> getOperatorsProcessors() {
+        return operatorsProcessors;
     }
 
-    public IndexedObjectFactory getIndexedObjectFactory() {
-        return indexedObjectFactory;
-    }
-
-    public void setSearcher(String name, Searcher searcher) {
-        searcherMap.put(name, searcher);
-    }
-
-    public void removeSearcher(String name) {
-        if (searcherMap.containsKey(name)) {
-            searcherMap.remove(name);
-        }
-    }
-
-    public boolean insert(E object) {
-        if (object instanceof IndexedObject) {
-            return insertObject(object);
-        } else {
-            try {
-                List<IndexedObject> indexedObjects = indexedObjectFactory.processBean(object);
-                for (IndexedObject obj : indexedObjects) {
-                    insertObject((E) obj);
-                }
-            } catch (IndexingException e) {
-                //log the exception and return false, because there was an error indexing the object.
-                logger.log(Level.SEVERE, "Could not insert the object. Possible reason " + e.getMessage());
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    public boolean remove(E object) {
-        if (object instanceof IndexedObject) {
-            removeObject(object);
-        } else {
-            try {
-                List<IndexedObject> indexedObjects = indexedObjectFactory.processBean(object);
-                for (IndexedObject obj : indexedObjects) {
-                    removeObject((E) obj);
-                }
-            } catch (IndexingException e) {
-                logger.log(Level.SEVERE, "Could not remove the object. Possible reason: " + e.getMessage());
-                return false;
-            }
-        }
-        return true;
-    }
-
-    protected boolean insertObject(E entry) {
-        Searcher searcher = getSearcher(entry);
-         if (searcher == null) {
-            return false;
-        }
-        return searcher.insert(entry);
-    }
-
-    protected boolean removeObject(E entry) {
-        Searcher searcher = getSearcher(entry);
-        if (searcher == null) {
-            return false;
-        }
-        return searcher.remove(entry);
-    }
-
-    public Searcher getSearcher(String name) {
-        return searcherMap.get(name);
-    }
-
-    protected Searcher getSearcher(E entry) {
-        String name = "";
-        if (entry instanceof IndexedObject) {
-            IndexedObject o = (IndexedObject) entry;
-            name = o.getName();
-        } else {
-            name = entry.getClass().getName();
-        }
-        Searcher searcher = searcherMap.get(name);
-        return searcher;
+    public void setOperatorsProcessors(Map<Class<? extends Expression>, QueryOperatorProcessor> operatorsProcessors) {
+        this.operatorsProcessors = operatorsProcessors;
     }
 
     /**
@@ -168,31 +86,15 @@ public abstract class IQueryProcessor<E extends IEntity> {
      * @param node the root node of the internal query representation
      * @return the results of the query
      */
-    public abstract ResultSet process(QueryParserNode node);
-
-    /**
-     * Processes an AND node.
-     *
-     * @param node
-     * @return
-     */
-    protected abstract ResultSet processAND(QueryParserNode node);
-
-    /**
-     * Processes an OR node.
-     *
-     * @param node
-     * @return
-     */
-    protected abstract ResultSet processOR(QueryParserNode node);
-
-    /**
-     * Processes the SIMILAR, EQUAL, NOTEQUAL nodes.
-     *
-     * @param node
-     * @return
-     */
-    protected abstract ResultSet processSIMILAR(QueryParserNode node, boolean top);
+    public ResultSet process(QueryParserNode node) {
+        if (getOperatorsProcessors().containsKey(node.predicateType)){
+            QueryOperatorProcessor operator = getOperatorsProcessors().get(node.predicateType);
+            return operator.process(node);
+        } else {
+            logger.info("No operator was found for: " + node.predicateType.getName());
+            return new ResultSetDefaultImpl<E>();
+        }
+    }
 
     /**
      * Method that breaks down the supplied CriteriaQuery into its internal
