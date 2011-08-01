@@ -2,25 +2,19 @@ package pt.inevo.encontra.common;
 
 import pt.inevo.encontra.common.distance.HasDistance;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Default implementation of a ResultSet.
  * The result set of a query.
  * Contains a list of Result's that can be iterated.
+ *
  * @author Ricardo
  */
 public class ResultSetDefaultImpl<T> implements ResultSet<T> {
 
     private List<ResultSetListener> listeners;
-    private SortedSet<Result<T>> results;
+    private SortedList<Result<T>> results;
     private Result<T> seedResult, worseResult;
     private double lowestScore;
     private int maxSize;
@@ -31,7 +25,7 @@ public class ResultSetDefaultImpl<T> implements ResultSet<T> {
     }
 
     public ResultSetDefaultImpl(List<Result<T>> results) {
-        this.results = Collections.synchronizedSortedSet(new TreeSet<Result<T>>(new ResultComparator(null)));
+        this.results = new SortedList<Result<T>>(new ResultComparator(null));
         this.results.addAll(results);
         listeners = new ArrayList<ResultSetListener>();
     }
@@ -41,7 +35,7 @@ public class ResultSetDefaultImpl<T> implements ResultSet<T> {
         this.maxSize = size;
 
         listeners = new ArrayList<ResultSetListener>();
-        results = Collections.synchronizedSortedSet(new TreeSet<Result<T>>(new ResultComparator(seed)));
+        this.results = new SortedList<Result<T>>(new ResultComparator(seed));
     }
 
     public Object getOwner() {
@@ -56,7 +50,7 @@ public class ResultSetDefaultImpl<T> implements ResultSet<T> {
 
         private Result<T> seed;
 
-        ResultComparator (Result<T> seed) {
+        ResultComparator(Result<T> seed) {
             this.seed = seed;
         }
 
@@ -66,7 +60,7 @@ public class ResultSetDefaultImpl<T> implements ResultSet<T> {
                 //checks the order
                 double dist1 = 0, dist2 = 0;
                 if (seed != null) {
-                    if (o1.getResultObject() instanceof HasDistance && o2.getResultObject() instanceof HasDistance){
+                    if (o1.getResultObject() instanceof HasDistance && o2.getResultObject() instanceof HasDistance) {
                         dist1 = ((HasDistance) seed.getResultObject()).getDistance(o1.getResultObject());
                         dist2 = ((HasDistance) seed.getResultObject()).getDistance(o2.getResultObject());
                     } else {
@@ -75,14 +69,24 @@ public class ResultSetDefaultImpl<T> implements ResultSet<T> {
                     }
 
                     if (dist1 == dist2) {   //have the same distance but they don't have the same object
-                        return -1;
-                    }
-                    else return new Double(dist1).compareTo(new Double(dist2));
+                        if (o1.compareTo(o2) == 1) {
+                            return -1;
+                        } else if (o1.compareTo(o2) == 0) {
+                            return 0;
+                        } else {
+                            return 1;
+                        }
+                    } else return new Double(dist2).compareTo(new Double(dist1));
                 } else {
                     if (o1.getScore() == o2.getScore()) {
-                        return -1;
-                    }
-                    else return new Double(o2.getScore()).compareTo(new Double(o1.getScore()));
+                        if (o1.compareTo(o2) == 1) {
+                            return -1;
+                        } else if (o1.compareTo(o2) == 0) {
+                            return 0;
+                        } else {
+                            return 1;
+                        }
+                    } else return new Double(o2.getScore()).compareTo(new Double(o1.getScore()));
                 }
 
             } catch (Exception ex) {
@@ -105,10 +109,10 @@ public class ResultSetDefaultImpl<T> implements ResultSet<T> {
                 if (!results.add(tResult)) {
                     System.out.println("That should not have happened.");
                 }
-                worseResult = results.last();
+                worseResult = results.getFirst();
 
                 if (seedResult.getResultObject() instanceof HasDistance) {
-                    lowestScore = ((HasDistance)seedResult.getResultObject()).getDistance(worseResult.getResultObject());
+                    lowestScore = ((HasDistance) seedResult.getResultObject()).getDistance(worseResult.getResultObject());
                 } else {
                     lowestScore = seedResult.getScore() - worseResult.getScore();
                 }
@@ -119,24 +123,27 @@ public class ResultSetDefaultImpl<T> implements ResultSet<T> {
             } else {
                 double score = 0;
                 if (seedResult.getResultObject() instanceof HasDistance) {
-                    score = ((HasDistance)seedResult.getResultObject()).getDistance(tResult.getResultObject());
+                    score = ((HasDistance) seedResult.getResultObject()).getDistance(tResult.getResultObject());
                 } else {
                     score = seedResult.getScore() - tResult.getScore();
                 }
 
-                if (score <= lowestScore) {
+                if (score >= lowestScore) {
                     return false;
                 } else {
                     boolean removed = remove(worseResult);
+                    if (!removed) {
+                        System.out.println("Error detected here!");
+                    }
                     results.add(tResult);
-                    worseResult = results.last();
-                    
+                    worseResult = results.getFirst();
+
                     if (seedResult.getResultObject() instanceof HasDistance) {
-                        lowestScore = ((HasDistance)seedResult.getResultObject()).getDistance(worseResult.getResultObject());
+                        lowestScore = ((HasDistance) seedResult.getResultObject()).getDistance(worseResult.getResultObject());
                     } else {
                         lowestScore = seedResult.getScore() - worseResult.getScore();
                     }
-                    
+
                     for (ResultSetListener lst : listeners) {
                         lst.handleEvent(new ResultSetEvent(ResultSetEvent.Event.ADDED, tResult, owner));
                     }
@@ -168,16 +175,16 @@ public class ResultSetDefaultImpl<T> implements ResultSet<T> {
             if (results.contains(r)) {
                 boolean value = results.remove(r);
                 if (results.size() > 0) {
-                    worseResult = results.last();
+                    worseResult = results.getLast();
                     try {
 
-                        if (seedResult.getResultObject() instanceof HasDistance){
-                            lowestScore = ((HasDistance)seedResult.getResultObject()).getDistance(worseResult.getResultObject());
+                        if (seedResult.getResultObject() instanceof HasDistance) {
+                            lowestScore = ((HasDistance) seedResult.getResultObject()).getDistance(worseResult.getResultObject());
                         } else {
                             lowestScore = seedResult.getScore() - worseResult.getScore();
                         }
 
-                        
+
                     } catch (Exception ex) {
                         System.out.println("[Error]: Problem when calculating the "
                                 + "distance between points. Possible reason: " + ex.toString());
@@ -280,12 +287,14 @@ public class ResultSetDefaultImpl<T> implements ResultSet<T> {
 
     @Override
     public Result<T> getFirst() {
-        return results.first();
+        return results.getFirst();
+//        return results.first();
     }
 
     @Override
     public Result<T> getLast() {
-        return results.last();
+        return results.getLast();
+//        return results.last();
     }
 
     @Override
@@ -314,11 +323,11 @@ public class ResultSetDefaultImpl<T> implements ResultSet<T> {
     }
 
     @Override
-    public ResultSet<T> getFirstResults(int value){
+    public ResultSet<T> getFirstResults(int value) {
         List<Result<T>> r = new ArrayList<Result<T>>();
         Iterator<Result<T>> it = results.iterator();
         int howMany = 0;
-        while(it.hasNext() && howMany < value){
+        while (it.hasNext() && howMany < value) {
             r.add(it.next());
             howMany++;
         }
