@@ -22,10 +22,7 @@ import pt.inevo.encontra.storage.EntityStorage;
 import pt.inevo.encontra.storage.IEntity;
 import pt.inevo.encontra.storage.IEntry;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -220,46 +217,19 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
         } else {
             boolean inserted = false;
             //save the object in the indexes
-            if (object instanceof IndexedObject) {
-                inserted = insertObject(object);
-            } else {
-                try {
-                    List<IndexedObject> indexedObjects = getIndexedObjectFactory().processBean(object);
-                    for (IndexedObject obj : indexedObjects) {
-                        inserted &= insertObject((O) obj);
-                    }
-                } catch (IndexingException e) {
-                    //log the exception and return false, because there was an error indexing the object.
-                    inserted = false;
+            try {
+                List<IndexedObject> indexedObjects = getIndexedObjects(object);
+                for (IndexedObject obj : indexedObjects) {
+                    inserted &= insertObject((O) obj);
                 }
+            } catch (IndexingException e) {
+                //log the exception and return false, because there was an error indexing the object.
+                logger.info("Couldn't insert the object: " + ((object!=null)? object.toString() : "'NULL Object'"));
+                inserted = false;
             }
 
             return inserted;
         }
-    }
-
-    protected boolean insertObject(O entry) {
-        Searcher searcher = getSearcher(entry);
-        if (searcher == null) { //couldn't find a searcher for adding the entry
-            return false;
-        }
-        return searcher.insert(entry);
-    }
-
-    public Searcher getSearcher(String name) {
-        return searcherMap.get(name);
-    }
-
-    protected Searcher getSearcher(O entry) {
-        String name = "";
-        if (entry instanceof IndexedObject) {
-            IndexedObject o = (IndexedObject) entry;
-            name = o.getName();
-        } else {
-            name = entry.getClass().getName();
-        }
-        Searcher searcher = searcherMap.get(name);
-        return searcher;
     }
 
     @Override
@@ -271,35 +241,102 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
         }
 
         if (extractor != null) {
-            Descriptor d = extractor.extract(object);
-            index.remove(d);
-        } else {
-            if (object instanceof IndexedObject) {
-                removeObject(object);
-            } else {
-                try {
-                    List<IndexedObject> indexedObjects = indexedObjectFactory.processBean(object);
-                    for (IndexedObject obj : indexedObjects) {
-                        removeObject((O) obj);
-                    }
-                } catch (IndexingException e) {
-                    return false;
+            Descriptor desc = extractor.extract(object);
+            if (desc instanceof Collection) {  // Handle MultiDescriptors!
+                boolean res = true;
+                Collection<Descriptor> descriptors = (Collection<Descriptor>) desc;
+                for (Descriptor d : descriptors) {
+                    res = res && index.remove(d);
                 }
+                return res;
             }
-            return true;
+        } else {
+            boolean inserted = false;
+            //save the object in the indexes
+            try {
+                List<IndexedObject> indexedObjects = getIndexedObjects(object);
+                for (IndexedObject obj : indexedObjects) {
+                    inserted &= removeObject((O) obj);
+                }
+            } catch (IndexingException e) {
+                //log the exception and return false, because there was an error indexing the object.
+                logger.info("Couldn't remove the object: " + ((object!=null)? object.toString() : "'NULL Object'"));
+                inserted = false;
+            }
+            return inserted;
         }
 
         return true;
     }
 
+    /**
+     * Inserts a given object into the correct searcher.
+     * Only used when the searcher is a compound one.
+     *
+     * @param entry
+     * @return
+     */
+    protected boolean insertObject(O entry) {
+        Searcher searcher = getSearcher(entry);
+        if (searcher == null) { //couldn't find a searcher for adding the entry
+            return false;
+        }
+        return searcher.insert(entry);
+    }
+
+    /**
+     * Removes a given object from the correct searcher.
+     * Only used when the searcher is a compound one.
+     *
+     * @param entry
+     * @return
+     */
     protected boolean removeObject(O entry) {
         Searcher searcher = getSearcher(entry);
-        if (searcher == null) {
+        if (searcher == null) { //couldn't find a searcher for removing the entry
             return false;
         }
         return searcher.remove(entry);
     }
 
+    /**
+     * This method gets a searcher by its name, if the current searcher is a compound one, meaning, other searchers are
+     * used to perform queries.
+     *
+     * @param name
+     * @return
+     */
+    public Searcher getSearcher(String name) {
+        return searcherMap.get(name);
+    }
+
+    /**
+     * This method retrieves a searcher given an object.
+     * If the object is an IndexedObject then, its name is used to look up for the searcher, otherwise,
+     * the class name is used.
+     *
+     * @param entry
+     * @return
+     */
+    protected Searcher getSearcher(O entry) {
+        String name;
+        if (entry instanceof IndexedObject) {
+            IndexedObject o = (IndexedObject) entry;
+            name = o.getName();
+        } else {
+            //if the object is not a IndexedObject, then retrieve the searcher by name
+            name = entry.getClass().getName();
+        }
+        Searcher searcher = getSearcher(name);
+        return searcher;
+    }
+
+    /**
+     * Generic search method. Should be overriden by the smarter Searchers and Engines.
+     *
+     * @param query the interrogation
+     * @return
+     */
     @Override
     public ResultSet search(Query query) {
         BenchmarkEntry searchBenchmark = benchmark.start("Search");
@@ -313,16 +350,19 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
         return res;
     }
 
+    /**
+     * Performs simple similarity queries (knn).
+     * Shortcut for get similar object, instead of using the Criteria Query API.
+     *
+     * @param object
+     * @param knn
+     * @return
+     */
     public ResultSet<O> similar(O object, int knn) {
         CriteriaQuery query = criteriaBuilder.createQuery();
-        if (object instanceof IndexedObject) {
-            IndexedObject o = (IndexedObject) object;
-            query.where(criteriaBuilder.similar(o.getName(), o)).limit(knn);
-            return search(query);
-        } else {
-            // TODO - must break down the IEntity? Should this be done here!
-        }
-        return new ResultSetDefaultImpl<O>();
+        IndexedObject o = getIndexedObject(object);
+        query.where(criteriaBuilder.similar(o.getName(), o)).limit(knn);
+        return search(query);
     }
 
     /**
@@ -338,11 +378,25 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
         if (object instanceof IndexedObject) {
             return (IndexedObject) object;
         } else if (object instanceof IEntity) {
-            // TODO break down the object!
             return new IndexedObject(null, object);
         } else { //just wraps the object into an IndexedObject
             return new IndexedObject(null, object);
         }
+    }
+
+    protected List<IndexedObject> getIndexedObjects(Object o) throws IndexingException {
+        List<IndexedObject> objects = new ArrayList<IndexedObject>();
+        if (o instanceof IndexedObject) {
+            objects.add((IndexedObject) o);
+        } else if (o instanceof IEntity) {
+            objects = indexedObjectFactory.processBean((IEntity) o);
+        } else {
+            //wrap the object into an IndexedObject and retrieve the objects
+            IndexedObject indexedObject = new IndexedObject(null, o);
+            objects.add(indexedObject);
+        }
+
+        return objects;
     }
 
     @Override
