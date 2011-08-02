@@ -184,6 +184,7 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
      * @return
      */
     public boolean contains(O object) {
+        assert (object != null);
         if (storage != null)
             return (storage.get(object.getId()) != null);
         else {
@@ -196,6 +197,7 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
 
     @Override
     public boolean insert(O object) {
+        assert (object != null);
         //saves the object in the storage - for the top domain searcher only
         if (storage != null) {
             O res = (O) storage.save(object);
@@ -262,6 +264,7 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
 
     @Override
     public boolean remove(O object) {
+        assert (object != null);
         //removes the object in the storage - for the top domain searcher only
         if (storage != null) {
             storage.delete(object);
