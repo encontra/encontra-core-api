@@ -15,7 +15,10 @@ import pt.inevo.encontra.index.Index;
 import pt.inevo.encontra.index.IndexedObject;
 import pt.inevo.encontra.index.IndexedObjectFactory;
 import pt.inevo.encontra.index.IndexingException;
+import pt.inevo.encontra.query.CriteriaQuery;
+import pt.inevo.encontra.query.Path;
 import pt.inevo.encontra.query.Query;
+import pt.inevo.encontra.query.criteria.CriteriaBuilder;
 import pt.inevo.encontra.storage.EntityStorage;
 import pt.inevo.encontra.storage.IEntity;
 import pt.inevo.encontra.storage.IEntry;
@@ -74,6 +77,11 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
      * Benchmarking the operations using the Searcher
      */
     protected Benchmark benchmark = new Benchmark("Searcher");
+
+    /**
+     * A criteria builder for creating internal queries (if necessary).
+     */
+    protected CriteriaBuilder criteriaBuilder;
 
     /**
      * Logging for all the searchers that extend the Abstract Searcher
@@ -304,8 +312,35 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
     }
 
     public ResultSet<O> similar(O object, int knn) {
-        // TODO - must implement this method ASAP
+        CriteriaQuery query = criteriaBuilder.createQuery();
+        if (object instanceof IndexedObject) {
+            IndexedObject o = (IndexedObject) object;
+            query.where(criteriaBuilder.similar(o.getName(), o)).limit(knn);
+            return search(query);
+        } else {
+            // TODO - must break down the IEntity? Should this be done here!
+        }
         return new ResultSetDefaultImpl<O>();
+    }
+
+    /**
+     * Gets an IndexedObject given an object.
+     * If is already an IndexedObject, just returns it.
+     * If it is a IEntity breaks it down into several IndexedObjects.
+     * Otherwise it just wraps the object into an IndexedObject.
+     *
+     * @param object
+     * @return
+     */
+    protected IndexedObject getIndexedObject(Object object) {
+        if (object instanceof IndexedObject) {
+            return (IndexedObject) object;
+        } else if (object instanceof IEntity) {
+            // TODO break down the object!
+            return new IndexedObject(null, object);
+        } else { //just wraps the object into an IndexedObject
+            return new IndexedObject(null, object);
+        }
     }
 
     @Override
