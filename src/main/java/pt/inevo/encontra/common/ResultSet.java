@@ -74,6 +74,14 @@ public interface ResultSet<T> extends Iterable<Result<T>> {
     public double getScore(Object resultObject);
 
     /**
+     * Checks if a resultObject (the object inside a Result) exists in any of the available Results.
+     * This helps handling operations looking for the same resultObject, but with different scores.
+     * @param resultObject the object to be checked
+     * @return true if a Result contains the object, or false otherwise
+     */
+    public Result<T> getResultByResultObject(Object resultObject);
+
+    /**
      * Removes a Result from the ResultSet.
      * @param o the Result to be removed
      * @return true if the removal is successfully finished, or false otherwise

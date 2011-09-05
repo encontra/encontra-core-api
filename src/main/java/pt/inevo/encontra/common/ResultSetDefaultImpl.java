@@ -276,6 +276,16 @@ public class ResultSetDefaultImpl<T> implements ResultSet<T> {
     }
 
     @Override
+    public Result<T> getResultByResultObject(Object resultObject) {
+        for (Result<T> r : results) {
+            if (r.getResultObject().equals(resultObject)) {
+                return r;
+            }
+        }
+        return null;
+    }
+
+    @Override
     public int getSize() {
         return results.size();
     }

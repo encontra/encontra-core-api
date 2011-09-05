@@ -220,6 +220,11 @@ public class SimpleResultSetImpl<T> implements ResultSet<T> {
     }
 
     @Override
+    public Result<T> getResultByResultObject(Object resultObject) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
     public int getSize() {
         return results.size();
     }
