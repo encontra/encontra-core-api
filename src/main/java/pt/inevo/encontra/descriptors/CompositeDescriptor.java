@@ -24,7 +24,8 @@ public class CompositeDescriptor implements Descriptor {
     }
 
     public void setDescriptors(Descriptor[] descriptors) {
-        this.descriptors = Arrays.asList(descriptors);
+        this.descriptors = new ArrayList<Descriptor>();
+        this.descriptors.addAll(Arrays.asList(descriptors));
         this.weights=new ArrayList<Double>(descriptors.length);
         for (int i = 0; i < descriptors.length; i++) {
             weights.add(1.0);
