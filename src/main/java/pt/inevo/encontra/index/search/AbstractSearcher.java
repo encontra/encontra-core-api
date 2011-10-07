@@ -215,7 +215,7 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
 
             return index.insert(desc);
         } else {
-            boolean inserted = false;
+            boolean inserted = true;
             //save the object in the indexes
             try {
                 List<IndexedObject> indexedObjects = getIndexedObjects(object);
@@ -251,7 +251,7 @@ public abstract class AbstractSearcher<O extends IEntity> implements Searcher<O>
                 return res;
             }
         } else {
-            boolean inserted = false;
+            boolean inserted = true;
             //save the object in the indexes
             try {
                 List<IndexedObject> indexedObjects = getIndexedObjects(object);
