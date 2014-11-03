@@ -10,7 +10,7 @@ public abstract class DescriptorExtractor<O extends IEntity, D extends Descripto
 
     public DescriptorExtractor(){}
     
-    public DescriptorExtractor(Class indexObjectClass,Class descriptorClass){
+    public DescriptorExtractor(Class indexObjectClass, Class descriptorClass){
         this.indexObjectClass=indexObjectClass;
         this.descriptorClass=descriptorClass;
     }
